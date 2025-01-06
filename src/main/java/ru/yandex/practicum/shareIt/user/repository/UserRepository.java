@@ -1,6 +1,5 @@
 package ru.yandex.practicum.shareIt.user.repository;
 
-import ru.yandex.practicum.shareIt.user.dto.UserDto;
 import ru.yandex.practicum.shareIt.user.User;
 
 public interface UserRepository {

@@ -1,18 +1,13 @@
 package ru.yandex.practicum.shareIt.user.mapper;
 
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
 import ru.yandex.practicum.shareIt.user.User;
+import ru.yandex.practicum.shareIt.user.dto.UserDto;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-@Component
-public class UserMapper implements RowMapper<User> {
-    public User mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+public class UserMapper {
+    public static User map(UserDto userDto) {
         return User.builder()
-                .id(resultSet.getLong("id"))
-                .name(resultSet.getString("name"))
+                .name(userDto.getName())
+                .email(userDto.getEmail())
                 .build();
     }
 }

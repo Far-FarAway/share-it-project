@@ -5,9 +5,9 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.shareIt.exception.ConditionsNotMatchException;
 import ru.yandex.practicum.shareIt.item.Item;
 import ru.yandex.practicum.shareIt.item.dto.ItemDto;
+import ru.yandex.practicum.shareIt.item.mapper.ItemDtoMapper;
+import ru.yandex.practicum.shareIt.item.mapper.ItemMapper;
 import ru.yandex.practicum.shareIt.item.repository.ItemRepository;
-import ru.yandex.practicum.shareIt.review.Review;
-import ru.yandex.practicum.shareIt.review.dto.ReviewDto;
 import ru.yandex.practicum.shareIt.user.repository.UserRepository;
 
 import java.util.List;
@@ -21,15 +21,15 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto postItem(long userId, ItemDto itemDto) {
 
-        Item item = itemRepository.postItem(makePOJO(userId, itemDto));
-        return makeDto(itemRepository.postItem(item));
+        Item item = itemRepository.postItem(ItemMapper.map(userId, itemDto));
+        return ItemDtoMapper.map(itemRepository.postItem(item));
     }
 
     @Override
     public ItemDto updateItem(long userId, long itemId, ItemDto itemDto) {
         if (itemRepository.checkOwner(userId, itemId)) {
-            Item item = makePOJO(userId, itemDto);
-            return makeDto(itemRepository.updateItem(itemId, item));
+            Item item = ItemMapper.map(userId, itemDto);
+            return ItemDtoMapper.map(itemRepository.updateItem(itemId, item));
         } else {
             throw new ConditionsNotMatchException("Только владелец может изменять данные предмета");
         }
@@ -37,20 +37,20 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto getItem(long itemId) {
-        return makeDto(itemRepository.getItem(itemId));
+        return ItemDtoMapper.map(itemRepository.getItem(itemId));
     }
 
     @Override
     public List<ItemDto> getUserItems(long userId) {
         return itemRepository.getUserItems(userId).stream()
-                .map(this::makeDto)
+                .map(ItemDtoMapper::map)
                 .toList();
     }
 
     @Override
     public List<ItemDto> itemSearch(String text) {
         return itemRepository.itemSearch(text).stream()
-                .map(this::makeDto)
+                .map(ItemDtoMapper::map)
                 .toList();
     }
 
@@ -61,44 +61,5 @@ public class ItemServiceImpl implements ItemService {
         } else {
             throw new ConditionsNotMatchException("Только владелец может удалить предмет");
         }
-    }
-
-    private Item makePOJO(long userId, ItemDto itemDto) {
-        List<Review> reviewList =  itemDto.getReviews().stream()
-                .map(reviewDto -> {
-                    return Review.builder()
-                            .reviewerName(reviewDto.getReviewerName())
-                            .description(reviewDto.getDescription())
-                            .build();
-                })
-                .toList();
-
-        return Item.builder()
-                .id(userId)
-                .name(itemDto.getName())
-                .description(itemDto.getDescription())
-                .available(itemDto.getAvailable())
-                .reviews(reviewList)
-                .bookCount(itemDto.getBookCount())
-                .build();
-    }
-
-    private ItemDto makeDto(Item item) {
-        List<ReviewDto> reviewDtoList =  item.getReviews().stream()
-                .map(review -> {
-                    return ReviewDto.builder()
-                            .reviewerName(review.getReviewerName())
-                            .description(review.getDescription())
-                            .build();
-                })
-                .toList();
-
-        return ItemDto.builder()
-                .name(item.getName())
-                .description(item.getDescription())
-                .available(item.getAvailable())
-                .reviews(reviewDtoList)
-                .bookCount(item.getBookCount())
-                .build();
     }
 }

@@ -1,6 +1,5 @@
 package ru.yandex.practicum.shareIt.item.service;
 
-import ru.yandex.practicum.shareIt.item.Item;
 import ru.yandex.practicum.shareIt.item.dto.ItemDto;
 
 import java.util.List;

@@ -1,17 +1,13 @@
 package ru.yandex.practicum.shareIt.review.mapper;
 
-import org.springframework.jdbc.core.RowMapper;
 import ru.yandex.practicum.shareIt.review.Review;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-public class ReviewMapper implements RowMapper<Review> {
-    public Review mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+public class ReviewMapper {
+    public static Review map(Review review) {
         return Review.builder()
-                .id(resultSet.getLong("id"))
-                .reviewerName(resultSet.getString("name"))
-                .description(resultSet.getString("description"))
+                .id(review.getId())
+                .reviewerName(review.getReviewerName())
+                .description(review.getDescription())
                 .build();
     }
 }

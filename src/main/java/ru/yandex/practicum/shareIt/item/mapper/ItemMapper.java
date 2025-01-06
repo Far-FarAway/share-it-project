@@ -1,25 +1,29 @@
 package ru.yandex.practicum.shareIt.item.mapper;
 
-import org.springframework.jdbc.core.RowMapper;
-import org.springframework.stereotype.Component;
 import ru.yandex.practicum.shareIt.item.Item;
+import ru.yandex.practicum.shareIt.item.dto.ItemDto;
+import ru.yandex.practicum.shareIt.review.Review;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.List;
 
-@Component
-public class ItemMapper implements RowMapper<Item> {
-    public Item mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+public class ItemMapper {
+    public static Item map(long userId, ItemDto itemDto) {
+        List<Review> reviewList = itemDto.getReviews().stream()
+                .map(reviewDto -> {
+                    return Review.builder()
+                            .reviewerName(reviewDto.getReviewerName())
+                            .description(reviewDto.getDescription())
+                            .build();
+                })
+                .toList();
+
         return Item.builder()
-                .id(resultSet.getLong("id"))
-                .owner(resultSet.getLong("owner"))
-                .name(resultSet.getString("name"))
-                .description(resultSet.getString("description"))
-                .available(resultSet.getBoolean("available"))
-                //при реализации БД добавить вызов запроса
-                .reviews(new ArrayList<>())
-                .bookCount(resultSet.getInt("book_count"))
+                .id(userId)
+                .name(itemDto.getName())
+                .description(itemDto.getDescription())
+                .available(itemDto.getAvailable())
+                .reviews(reviewList)
+                .bookCount(itemDto.getBookCount())
                 .build();
     }
 }

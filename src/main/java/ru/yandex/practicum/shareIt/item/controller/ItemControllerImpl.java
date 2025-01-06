@@ -3,7 +3,6 @@ package ru.yandex.practicum.shareIt.item.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.shareIt.item.Item;
 import ru.yandex.practicum.shareIt.item.dto.ItemDto;
 import ru.yandex.practicum.shareIt.item.service.ItemService;
 import ru.yandex.practicum.shareIt.maker.OnCreate;

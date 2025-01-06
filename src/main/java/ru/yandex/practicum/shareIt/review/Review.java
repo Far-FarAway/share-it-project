@@ -2,7 +2,6 @@ package ru.yandex.practicum.shareIt.review;
 
 import lombok.Builder;
 import lombok.Data;
-import ru.yandex.practicum.shareIt.review.dto.ReviewDto;
 
 @Data
 @Builder

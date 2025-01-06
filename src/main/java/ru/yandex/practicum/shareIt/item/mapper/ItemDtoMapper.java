@@ -1,18 +1,28 @@
 package ru.yandex.practicum.shareIt.item.mapper;
 
-import org.springframework.jdbc.core.RowMapper;
+import ru.yandex.practicum.shareIt.item.Item;
 import ru.yandex.practicum.shareIt.item.dto.ItemDto;
+import ru.yandex.practicum.shareIt.review.dto.ReviewDto;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.List;
 
-public class ItemDtoMapper implements RowMapper<ItemDto> {
-    public ItemDto mapRow(ResultSet resultSet, int rowNum) throws SQLException {
+public class ItemDtoMapper {
+    public static ItemDto map(Item item) {
+        List<ReviewDto> reviewDtoList =  item.getReviews().stream()
+                .map(review -> {
+                    return ReviewDto.builder()
+                            .reviewerName(review.getReviewerName())
+                            .description(review.getDescription())
+                            .build();
+                })
+                .toList();
+
         return ItemDto.builder()
-                .name(resultSet.getString("name"))
-                .description(resultSet.getString("description"))
-                .available(resultSet.getBoolean("available"))
-                .bookCount(resultSet.getInt("bookCount"))
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .reviews(reviewDtoList)
+                .bookCount(item.getBookCount())
                 .build();
     }
 }
