@@ -14,14 +14,13 @@ public class ItemRepositoryImpl implements ItemRepository {
     private final Comparator<Long> comparator = Comparator.comparing(ob -> ob);
     private final Map<Long, Item> items = new HashMap<>();
 
-    public Item postItem(long userId, Item item) {
+    public Item postItem(Item item) {
         long id = items.values().stream()
                 .map(Item::getId)
                 .max(comparator)
                 .orElse((long) 0) + 1;
 
         item.setId(id);
-        item.setOwner(userId);
         items.put(id, item);
 
         return item;

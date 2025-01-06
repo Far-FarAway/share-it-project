@@ -5,7 +5,7 @@ import ru.yandex.practicum.shareIt.item.Item;
 import java.util.List;
 
 public interface ItemRepository {
-    Item postItem(long userId, Item item);
+    Item postItem(Item item);
 
     Item updateItem(long itemId, Item item);
 

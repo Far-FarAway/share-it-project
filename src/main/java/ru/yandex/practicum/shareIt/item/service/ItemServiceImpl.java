@@ -17,7 +17,8 @@ public class ItemServiceImpl implements ItemService {
 
     public Item postItem(long userId, Item item) {
         userRepository.isUserExists(userId);
-        return itemRepository.postItem(userId, item);
+        item.setOwner(userId);
+        return itemRepository.postItem(item);
     }
 
     public Item updateItem(long userId, long itemId, Item item) {

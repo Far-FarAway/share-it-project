@@ -9,5 +9,5 @@ import ru.yandex.practicum.shareIt.review.dto.ReviewDto;
 public class Review {
     private long id;
     private String reviewerName;
-    private String description;a
+    private String description;
 }
