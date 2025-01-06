@@ -16,18 +16,18 @@ public class UserControllerImpl {
     private final UserService service;
 
     @PostMapping
-    public User saveUser(@Validated({OnCreate.class}) @RequestBody User user) {
-        return service.saveUser(user);
+    public UserDto saveUser(@Validated({OnCreate.class}) @RequestBody UserDto userDto) {
+        return service.saveUser(userDto);
     }
 
     @GetMapping("/{userId}")
-    public User getUser(@PathVariable long userId) {
+    public UserDto getUser(@PathVariable long userId) {
         return service.getUser(userId);
     }
 
     @PatchMapping("/{userId}")
-    public User updateUser(@PathVariable long userId, @RequestBody User user) {
-        return service.updateUser(userId, user);
+    public UserDto updateUser(@PathVariable long userId, @RequestBody UserDto userDto) {
+        return service.updateUser(userId, userDto);
     }
 
     @DeleteMapping("/{userId}")

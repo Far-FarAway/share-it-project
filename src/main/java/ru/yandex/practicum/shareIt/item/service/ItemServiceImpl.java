@@ -4,7 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.shareIt.exception.ConditionsNotMatchException;
 import ru.yandex.practicum.shareIt.item.Item;
+import ru.yandex.practicum.shareIt.item.dto.ItemDto;
 import ru.yandex.practicum.shareIt.item.repository.ItemRepository;
+import ru.yandex.practicum.shareIt.review.Review;
+import ru.yandex.practicum.shareIt.review.dto.ReviewDto;
 import ru.yandex.practicum.shareIt.user.repository.UserRepository;
 
 import java.util.List;
@@ -16,34 +19,39 @@ public class ItemServiceImpl implements ItemService {
     private final UserRepository userRepository;
 
     @Override
-    public Item postItem(long userId, Item item) {
-        userRepository.isUserExists(userId);
-        item.setOwner(userId);
-        return itemRepository.postItem(item);
+    public ItemDto postItem(long userId, ItemDto itemDto) {
+
+        Item item = itemRepository.postItem(makePOJO(userId, itemDto));
+        return makeDto(itemRepository.postItem(item));
     }
 
     @Override
-    public Item updateItem(long userId, long itemId, Item item) {
+    public ItemDto updateItem(long userId, long itemId, ItemDto itemDto) {
         if (itemRepository.checkOwner(userId, itemId)) {
-            return itemRepository.updateItem(itemId, item);
+            Item item = makePOJO(userId, itemDto);
+            return makeDto(itemRepository.updateItem(itemId, item));
         } else {
             throw new ConditionsNotMatchException("Только владелец может изменять данные предмета");
         }
     }
 
     @Override
-    public Item getItem(long itemId) {
-        return itemRepository.getItem(itemId);
+    public ItemDto getItem(long itemId) {
+        return makeDto(itemRepository.getItem(itemId));
     }
 
     @Override
-    public List<Item> getUserItems(long userId) {
-        return itemRepository.getUserItems(userId);
+    public List<ItemDto> getUserItems(long userId) {
+        return itemRepository.getUserItems(userId).stream()
+                .map(this::makeDto)
+                .toList();
     }
 
     @Override
-    public List<Item> itemSearch(String text) {
-        return itemRepository.itemSearch(text);
+    public List<ItemDto> itemSearch(String text) {
+        return itemRepository.itemSearch(text).stream()
+                .map(this::makeDto)
+                .toList();
     }
 
     @Override
@@ -53,5 +61,44 @@ public class ItemServiceImpl implements ItemService {
         } else {
             throw new ConditionsNotMatchException("Только владелец может удалить предмет");
         }
+    }
+
+    private Item makePOJO(long userId, ItemDto itemDto) {
+        List<Review> reviewList =  itemDto.getReviews().stream()
+                .map(reviewDto -> {
+                    return Review.builder()
+                            .reviewerName(reviewDto.getReviewerName())
+                            .description(reviewDto.getDescription())
+                            .build();
+                })
+                .toList();
+
+        return Item.builder()
+                .id(userId)
+                .name(itemDto.getName())
+                .description(itemDto.getDescription())
+                .available(itemDto.getAvailable())
+                .reviews(reviewList)
+                .bookCount(itemDto.getBookCount())
+                .build();
+    }
+
+    private ItemDto makeDto(Item item) {
+        List<ReviewDto> reviewDtoList =  item.getReviews().stream()
+                .map(review -> {
+                    return ReviewDto.builder()
+                            .reviewerName(review.getReviewerName())
+                            .description(review.getDescription())
+                            .build();
+                })
+                .toList();
+
+        return ItemDto.builder()
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .reviews(reviewDtoList)
+                .bookCount(item.getBookCount())
+                .build();
     }
 }

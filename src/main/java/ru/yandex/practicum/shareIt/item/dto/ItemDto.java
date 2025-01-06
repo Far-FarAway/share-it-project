@@ -11,7 +11,7 @@ import java.util.List;
 public class ItemDto {
     private String name;
     private String description;
-    private boolean available;
-    private List<ReviewDto> review;
+    private Boolean available;
+    private List<ReviewDto> reviews;
     private Integer bookCount;
 }

@@ -4,11 +4,11 @@ import ru.yandex.practicum.shareIt.user.User;
 import ru.yandex.practicum.shareIt.user.dto.UserDto;
 
 public interface UserService {
-    User saveUser(User user);
+    UserDto saveUser(UserDto userDto);
 
-    User getUser(long id);
+    UserDto getUser(long id);
 
-    User updateUser(long id, User user);
+    UserDto updateUser(long id, UserDto userDto);
 
     void deleteUser(long id);
 }

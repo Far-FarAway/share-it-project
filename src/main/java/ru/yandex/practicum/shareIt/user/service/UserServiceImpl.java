@@ -12,24 +12,40 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
 
     @Override
-    public User saveUser(User user) {
-        repository.checkSameEmail(user.getEmail());
-        return repository.saveUser(user);
+    public UserDto saveUser(UserDto userDto) {
+        repository.checkSameEmail(userDto.getEmail());
+        User user = makePOJO(userDto);
+        return makeDto(repository.saveUser(user));
     }
 
     @Override
-    public User getUser(long id) {
-        return repository.getUser(id);
+    public UserDto getUser(long id) {
+        return makeDto(repository.getUser(id));
     }
 
     @Override
-    public User updateUser(long id, User user) {
-        repository.checkSameEmail(user.getEmail());
-        return repository.updateUser(id, user);
+    public UserDto updateUser(long id, UserDto userDto) {
+        repository.checkSameEmail(userDto.getEmail());
+        User user = makePOJO(userDto);
+        return makeDto(repository.updateUser(id, user));
     }
 
     @Override
     public void deleteUser(long id) {
         repository.deleteUser(id);
+    }
+
+    private User makePOJO(UserDto userDto) {
+        return User.builder()
+                .name(userDto.getName())
+                .email(userDto.getEmail())
+                .build();
+    }
+
+    private UserDto makeDto(User user) {
+        return UserDto.builder()
+                .name(user.getName())
+                .email(user.getEmail())
+                .build();
     }
 }
