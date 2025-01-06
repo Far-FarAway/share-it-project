@@ -14,6 +14,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     private final Comparator<Long> comparator = Comparator.comparing(ob -> ob);
     private final Map<Long, Item> items = new HashMap<>();
 
+    @Override
     public Item postItem(Item item) {
         long id = items.values().stream()
                 .map(Item::getId)
@@ -26,6 +27,7 @@ public class ItemRepositoryImpl implements ItemRepository {
         return item;
     }
 
+    @Override
     public Item updateItem(long itemId, Item item) {
         Item oldItem = items.get(itemId);
         Item updatedItem = Item.builder()
@@ -43,16 +45,19 @@ public class ItemRepositoryImpl implements ItemRepository {
         return updatedItem;
     }
 
+    @Override
     public Item getItem(long itemId) {
         return items.get(itemId);
     }
 
+    @Override
     public List<Item> getItems(long userId) {
         return items.values().stream()
                 .filter(item -> item.getOwner() == userId)
                 .toList();
     }
 
+    @Override
     public List<Item> itemSearch(String text) {
         return items.values().stream()
                 .filter(item -> !(text.isBlank()) && item.getAvailable())
@@ -61,10 +66,12 @@ public class ItemRepositoryImpl implements ItemRepository {
                 .toList();
     }
 
+    @Override
     public void deleteItem(long itemId) {
         items.remove(itemId);
     }
 
+    @Override
     public boolean checkOwner(long userId, long itemId) {
         if (items.containsKey(itemId)) {
             return items.get(itemId).getOwner() == userId;

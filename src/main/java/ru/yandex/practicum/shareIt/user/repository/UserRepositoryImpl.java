@@ -16,6 +16,7 @@ public class UserRepositoryImpl implements UserRepository {
     private final Comparator<Long> comparator = Comparator.comparing(ob -> ob);
     private final Map<Long, User> users = new HashMap<>();
 
+    @Override
     public User saveUser(User user) {
         long id = users.values().stream()
                 .map(User::getId)
@@ -28,10 +29,12 @@ public class UserRepositoryImpl implements UserRepository {
         return user;
     }
 
+    @Override
     public User getUser(long id) {
         return users.get(id);
     }
 
+    @Override
     public User updateUser(long id, User user) {
         User oldUser = users.get(id);
         oldUser.setName(user.getName() == null ? oldUser.getName() : user.getName());
@@ -40,10 +43,12 @@ public class UserRepositoryImpl implements UserRepository {
         return oldUser;
     }
 
+    @Override
     public void deleteUser(long id) {
         users.remove(id);
     }
 
+    @Override
     public void checkSameEmail(String email) {
         if (email != null) {
             Optional<User> sameEmail = users.values().stream()
@@ -56,6 +61,7 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
+    @Override
     public void isUserExists(Long userId) {
         if (!users.containsKey(userId)) {
             throw new NotFoundException("Не найден пользователь с id: " + userId);

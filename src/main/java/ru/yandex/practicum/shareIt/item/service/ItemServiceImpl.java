@@ -15,12 +15,14 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
 
+    @Override
     public Item postItem(long userId, Item item) {
         userRepository.isUserExists(userId);
         item.setOwner(userId);
         return itemRepository.postItem(item);
     }
 
+    @Override
     public Item updateItem(long userId, long itemId, Item item) {
         if (itemRepository.checkOwner(userId, itemId)) {
             return itemRepository.updateItem(itemId, item);
@@ -29,18 +31,22 @@ public class ItemServiceImpl implements ItemService {
         }
     }
 
+    @Override
     public Item getItem(long itemId) {
         return itemRepository.getItem(itemId);
     }
 
+    @Override
     public List<Item> getItems(long userId) {
         return itemRepository.getItems(userId);
     }
 
+    @Override
     public List<Item> itemSearch(String text) {
         return itemRepository.itemSearch(text);
     }
 
+    @Override
     public void deleteItem(long userId, long itemId) {
         if (itemRepository.checkOwner(userId, itemId)) {
             itemRepository.deleteItem(itemId);
