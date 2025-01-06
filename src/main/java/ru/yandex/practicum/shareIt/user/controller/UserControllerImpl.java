@@ -5,7 +5,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.shareIt.maker.OnCreate;
 import ru.yandex.practicum.shareIt.user.User;
-import ru.yandex.practicum.shareIt.user.dto.UserDTO;
+import ru.yandex.practicum.shareIt.user.dto.UserDto;
 import ru.yandex.practicum.shareIt.user.service.UserService;
 
 @RestController
@@ -21,7 +21,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @GetMapping("/{userId}")
-    public UserDTO getUser(@PathVariable long userId) {
+    public UserDto getUser(@PathVariable long userId) {
         return service.getUser(userId);
     }
 

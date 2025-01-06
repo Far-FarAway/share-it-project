@@ -7,7 +7,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Data;
 import ru.yandex.practicum.shareIt.maker.OnCreate;
-import ru.yandex.practicum.shareIt.user.dto.UserDTO;
+import ru.yandex.practicum.shareIt.user.dto.UserDto;
 
 @Data
 @Builder
@@ -22,8 +22,8 @@ public class User {
     @NotBlank(groups = {OnCreate.class})
     private String email;
 
-    public UserDTO makeDTO() {
-        return UserDTO.builder()
+    public UserDto makeDTO() {
+        return UserDto.builder()
                 .id(id)
                 .name(name)
                 .email(email)

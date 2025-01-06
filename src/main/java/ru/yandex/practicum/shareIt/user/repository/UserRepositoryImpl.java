@@ -3,7 +3,7 @@ package ru.yandex.practicum.shareIt.user.repository;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.shareIt.exception.NotFoundException;
 import ru.yandex.practicum.shareIt.exception.SameEmailException;
-import ru.yandex.practicum.shareIt.user.dto.UserDTO;
+import ru.yandex.practicum.shareIt.user.dto.UserDto;
 import ru.yandex.practicum.shareIt.user.User;
 
 import java.util.Comparator;
@@ -28,7 +28,7 @@ public class UserRepositoryImpl implements UserRepository {
         return user;
     }
 
-    public UserDTO getUser(long id) {
+    public UserDto getUser(long id) {
         return users.get(id).makeDTO();
     }
 

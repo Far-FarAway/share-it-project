@@ -2,7 +2,7 @@ package ru.yandex.practicum.shareIt.review;
 
 import lombok.Builder;
 import lombok.Data;
-import ru.yandex.practicum.shareIt.review.dto.ReviewDTO;
+import ru.yandex.practicum.shareIt.review.dto.ReviewDto;
 
 @Data
 @Builder
@@ -11,8 +11,8 @@ public class Review {
     private String reviewerName;
     private String description;
 
-    public ReviewDTO getDTO() {
-        return ReviewDTO.builder()
+    public ReviewDto getDTO() {
+        return ReviewDto.builder()
                 .reviewerName(reviewerName)
                 .description(description)
                 .build();

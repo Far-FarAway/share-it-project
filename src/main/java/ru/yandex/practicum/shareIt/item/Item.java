@@ -4,9 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
-import ru.yandex.practicum.shareIt.item.dto.ItemDTO;
+import ru.yandex.practicum.shareIt.item.dto.ItemDto;
 import ru.yandex.practicum.shareIt.maker.OnCreate;
-import ru.yandex.practicum.shareIt.review.dto.ReviewDTO;
+import ru.yandex.practicum.shareIt.review.dto.ReviewDto;
 import ru.yandex.practicum.shareIt.review.Review;
 
 import java.util.ArrayList;
@@ -28,16 +28,16 @@ public class Item {
     private List<Review> reviews = new ArrayList<>();
     private Integer bookCount;
 
-    public ItemDTO makeDTO() {
-        List<ReviewDTO> reviewDTOList = reviews.stream()
+    public ItemDto makeDTO() {
+        List<ReviewDto> reviewDtoList = reviews.stream()
                 .map(Review::getDTO)
                 .toList();
 
-        return ItemDTO.builder()
+        return ItemDto.builder()
                 .name(name)
                 .description(description)
                 .available(available)
-                .review(reviewDTOList)
+                .review(reviewDtoList)
                 .bookCount(bookCount)
                 .build();
     }
