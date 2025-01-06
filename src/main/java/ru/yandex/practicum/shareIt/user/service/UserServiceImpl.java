@@ -12,26 +12,24 @@ import ru.yandex.practicum.shareIt.user.repository.UserRepository;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository repository;
-    private final UserMapper userMapper;
-    private final UserDtoMapper userDtoMapper;
 
     @Override
     public UserDto saveUser(UserDto userDto) {
         repository.checkSameEmail(userDto.getEmail());
-        User user = userMapper.map(userDto);
-        return userDtoMapper.map(repository.saveUser(user));
+        User user = UserMapper.map(userDto);
+        return UserDtoMapper.map(repository.saveUser(user));
     }
 
     @Override
     public UserDto getUser(long id) {
-        return userDtoMapper.map(repository.getUser(id));
+        return UserDtoMapper.map(repository.getUser(id));
     }
 
     @Override
     public UserDto updateUser(long id, UserDto userDto) {
         repository.checkSameEmail(userDto.getEmail());
-        User user = userMapper.map(userDto);
-        return userDtoMapper.map(repository.updateUser(id, user));
+        User user = UserMapper.map(userDto);
+        return UserDtoMapper.map(repository.updateUser(id, user));
     }
 
     @Override
