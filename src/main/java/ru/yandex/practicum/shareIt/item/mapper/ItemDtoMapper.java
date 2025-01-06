@@ -24,6 +24,7 @@ public class ItemDtoMapper {
         }
 
         return ItemDto.builder()
+                .id(item.getId())
                 .name(item.getName())
                 .description(item.getDescription())
                 .available(item.getAvailable())
