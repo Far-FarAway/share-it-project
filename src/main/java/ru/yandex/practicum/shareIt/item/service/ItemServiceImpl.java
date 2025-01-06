@@ -3,6 +3,7 @@ package ru.yandex.practicum.shareIt.item.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.shareIt.exception.ConditionsNotMatchException;
+import ru.yandex.practicum.shareIt.exception.NotFoundException;
 import ru.yandex.practicum.shareIt.item.Item;
 import ru.yandex.practicum.shareIt.item.dto.ItemDto;
 import ru.yandex.practicum.shareIt.item.mapper.ItemDtoMapper;
@@ -37,11 +38,17 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto getItem(long itemId) {
-        return ItemDtoMapper.map(itemRepository.getItem(itemId));
+        Item item = itemRepository.getItem(itemId);
+        if (item != null) {
+            return ItemDtoMapper.map(item);
+        } else {
+            throw new NotFoundException("Не найден предмет с id: " + itemId);
+        }
     }
 
     @Override
     public List<ItemDto> getUserItems(long userId) {
+        userRepository.isUserExists(userId);
         return itemRepository.getUserItems(userId).stream()
                 .map(ItemDtoMapper::map)
                 .toList();
