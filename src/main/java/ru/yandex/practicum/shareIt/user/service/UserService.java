@@ -1,7 +1,7 @@
 package ru.yandex.practicum.shareIt.user.service;
 
 import ru.yandex.practicum.shareIt.user.User;
-import ru.yandex.practicum.shareIt.user.DTO.UserDTO;
+import ru.yandex.practicum.shareIt.user.dto.UserDTO;
 
 public interface UserService {
     User saveUser(User user);

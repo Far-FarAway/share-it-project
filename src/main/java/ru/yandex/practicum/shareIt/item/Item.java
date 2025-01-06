@@ -4,9 +4,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
-import ru.yandex.practicum.shareIt.item.DTO.ItemDTO;
+import ru.yandex.practicum.shareIt.item.dto.ItemDTO;
 import ru.yandex.practicum.shareIt.maker.OnCreate;
-import ru.yandex.practicum.shareIt.review.DTO.ReviewDTO;
+import ru.yandex.practicum.shareIt.review.dto.ReviewDTO;
 import ru.yandex.practicum.shareIt.review.Review;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package ru.yandex.practicum.shareIt.review.DTO;
+package ru.yandex.practicum.shareIt.review.dto;
 
 import lombok.Builder;
 import lombok.Data;

@@ -2,7 +2,7 @@ package ru.yandex.practicum.shareIt.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.shareIt.user.DTO.UserDTO;
+import ru.yandex.practicum.shareIt.user.dto.UserDTO;
 import ru.yandex.practicum.shareIt.user.User;
 import ru.yandex.practicum.shareIt.user.repository.UserRepository;
 

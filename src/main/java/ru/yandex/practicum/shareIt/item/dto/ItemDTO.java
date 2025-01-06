@@ -1,8 +1,8 @@
-package ru.yandex.practicum.shareIt.item.DTO;
+package ru.yandex.practicum.shareIt.item.dto;
 
 import lombok.Builder;
 import lombok.Data;
-import ru.yandex.practicum.shareIt.review.DTO.ReviewDTO;
+import ru.yandex.practicum.shareIt.review.dto.ReviewDTO;
 
 import java.util.List;
 
