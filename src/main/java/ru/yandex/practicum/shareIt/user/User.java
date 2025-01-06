@@ -11,13 +11,7 @@ import ru.yandex.practicum.shareIt.maker.OnCreate;
 @Data
 @Builder
 public class User {
-    @Positive
     private Long id;
-    @NotNull(groups = {OnCreate.class})
-    @NotBlank(groups = {OnCreate.class})
     private String name;
-    @Email(groups = {Builder.Default.class, OnCreate.class})
-    @NotNull(groups = {OnCreate.class})
-    @NotBlank(groups = {OnCreate.class})
     private String email;
 }

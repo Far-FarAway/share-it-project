@@ -15,13 +15,8 @@ import java.util.List;
 public class Item {
     private Long id;
     private Long owner;
-    @NotNull(groups = {OnCreate.class})
-    @NotBlank(groups = {OnCreate.class})
     private String name;
-    @NotNull(groups = {OnCreate.class})
-    @NotBlank(groups = {OnCreate.class})
     private String description;
-    @NotNull(groups = {OnCreate.class})
     private Boolean available;
     private List<Review> reviews = new ArrayList<>();
     private Integer bookCount;
