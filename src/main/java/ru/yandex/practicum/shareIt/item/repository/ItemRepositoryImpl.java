@@ -51,7 +51,7 @@ public class ItemRepositoryImpl implements ItemRepository {
     }
 
     @Override
-    public List<Item> getItems(long userId) {
+    public List<Item> getUserItems(long userId) {
         return items.values().stream()
                 .filter(item -> item.getOwner() == userId)
                 .toList();

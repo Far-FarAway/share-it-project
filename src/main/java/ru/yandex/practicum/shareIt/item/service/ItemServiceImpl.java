@@ -37,8 +37,8 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<Item> getItems(long userId) {
-        return itemRepository.getItems(userId);
+    public List<Item> getUserItems(long userId) {
+        return itemRepository.getUserItems(userId);
     }
 
     @Override
