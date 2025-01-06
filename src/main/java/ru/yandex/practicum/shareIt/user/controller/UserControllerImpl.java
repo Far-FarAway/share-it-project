@@ -12,7 +12,7 @@ import ru.yandex.practicum.shareIt.user.service.UserService;
 @RequestMapping("/users")
 @RequiredArgsConstructor
 @Validated
-public class UserControllerImpl implements UserController {
+public class UserControllerImpl {
     private final UserService service;
 
     @PostMapping
@@ -21,7 +21,7 @@ public class UserControllerImpl implements UserController {
     }
 
     @GetMapping("/{userId}")
-    public UserDto getUser(@PathVariable long userId) {
+    public User getUser(@PathVariable long userId) {
         return service.getUser(userId);
     }
 

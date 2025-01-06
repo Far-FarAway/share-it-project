@@ -27,18 +27,4 @@ public class Item {
     private Boolean available;
     private List<Review> reviews = new ArrayList<>();
     private Integer bookCount;
-
-    public ItemDto makeDTO() {
-        List<ReviewDto> reviewDtoList = reviews.stream()
-                .map(Review::getDTO)
-                .toList();
-
-        return ItemDto.builder()
-                .name(name)
-                .description(description)
-                .available(available)
-                .review(reviewDtoList)
-                .bookCount(bookCount)
-                .build();
-    }
 }

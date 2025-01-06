@@ -21,12 +21,4 @@ public class User {
     @NotNull(groups = {OnCreate.class})
     @NotBlank(groups = {OnCreate.class})
     private String email;
-
-    public UserDto makeDTO() {
-        return UserDto.builder()
-                .id(id)
-                .name(name)
-                .email(email)
-                .build();
-    }
 }

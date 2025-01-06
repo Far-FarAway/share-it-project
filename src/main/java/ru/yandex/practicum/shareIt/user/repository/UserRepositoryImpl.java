@@ -28,8 +28,8 @@ public class UserRepositoryImpl implements UserRepository {
         return user;
     }
 
-    public UserDto getUser(long id) {
-        return users.get(id).makeDTO();
+    public User getUser(long id) {
+        return users.get(id);
     }
 
     public User updateUser(long id, User user) {

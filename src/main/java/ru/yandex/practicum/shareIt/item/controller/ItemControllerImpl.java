@@ -13,7 +13,7 @@ import java.util.List;
 @RequestMapping("/items")
 @RequiredArgsConstructor
 @Validated
-public class ItemControllerImpl implements ItemController {
+public class ItemControllerImpl {
     private final ItemService service;
 
     @PostMapping

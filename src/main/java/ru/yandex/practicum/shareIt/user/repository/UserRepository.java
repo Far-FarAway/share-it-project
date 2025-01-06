@@ -6,7 +6,7 @@ import ru.yandex.practicum.shareIt.user.User;
 public interface UserRepository {
     User saveUser(User user);
 
-    UserDto getUser(long id);
+    User getUser(long id);
 
     User updateUser(long id, User user);
 
