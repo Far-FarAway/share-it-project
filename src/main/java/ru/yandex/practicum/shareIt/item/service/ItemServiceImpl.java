@@ -23,7 +23,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto postItem(long userId, ItemDto itemDto) {
         userRepository.isUserExists(userId);
         Item item = itemRepository.postItem(ItemMapper.map(userId, itemDto));
-        return ItemDtoMapper.map(itemRepository.postItem(item));
+        return ItemDtoMapper.map(item);
     }
 
     @Override
