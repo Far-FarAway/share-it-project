@@ -1,10 +1,7 @@
 package ru.yandex.practicum.shareIt.item;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
-import ru.yandex.practicum.shareIt.maker.OnCreate;
 import ru.yandex.practicum.shareIt.review.Review;
 
 import java.util.ArrayList;
