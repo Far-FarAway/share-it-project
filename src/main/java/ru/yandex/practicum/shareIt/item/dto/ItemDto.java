@@ -6,9 +6,6 @@ import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Data;
 import ru.yandex.practicum.shareIt.maker.OnCreate;
-import ru.yandex.practicum.shareIt.review.dto.ReviewDto;
-
-import java.util.List;
 
 @Data
 @Builder
@@ -23,6 +20,5 @@ public class ItemDto {
     private String description;
     @NotNull(groups = {OnCreate.class})
     private Boolean available;
-    private List<ReviewDto> reviews;
     private Integer bookCount;
 }

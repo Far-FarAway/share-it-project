@@ -37,7 +37,6 @@ public class ItemRepositoryImpl implements ItemRepository {
                 .description(item.getDescription() == null || item.getDescription().isBlank() ?
                         oldItem.getDescription() : item.getDescription())
                 .available(item.getAvailable() == null ? oldItem.getAvailable() : item.getAvailable())
-                .reviews(item.getReviews() == null ? oldItem.getReviews() : item.getReviews())
                 .bookCount(item.getBookCount() == null ? oldItem.getBookCount() : item.getBookCount())
                 .build();
 
