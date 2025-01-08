@@ -6,7 +6,6 @@ import ru.yandex.practicum.shareIt.exception.ConditionsNotMatchException;
 import ru.yandex.practicum.shareIt.exception.NotFoundException;
 import ru.yandex.practicum.shareIt.item.Item;
 import ru.yandex.practicum.shareIt.item.dto.ItemDto;
-import ru.yandex.practicum.shareIt.item.mapper.ItemDtoMapper;
 import ru.yandex.practicum.shareIt.item.mapper.ItemMapper;
 import ru.yandex.practicum.shareIt.item.repository.ItemRepository;
 import ru.yandex.practicum.shareIt.user.repository.UserRepository;
@@ -22,15 +21,15 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto postItem(long userId, ItemDto itemDto) {
         userRepository.isUserExists(userId);
-        Item item = itemRepository.postItem(ItemMapper.map(userId, itemDto));
-        return ItemDtoMapper.map(item);
+        Item item = itemRepository.postItem(ItemMapper.makePOJO(userId, itemDto));
+        return ItemMapper.makeDto(item);
     }
 
     @Override
     public ItemDto updateItem(long userId, long itemId, ItemDto itemDto) {
         if (itemRepository.checkOwner(userId, itemId)) {
-            Item item = ItemMapper.map(userId, itemDto);
-            return ItemDtoMapper.map(itemRepository.updateItem(itemId, item));
+            Item item = ItemMapper.makePOJO(userId, itemDto);
+            return ItemMapper.makeDto(itemRepository.updateItem(itemId, item));
         } else {
             throw new ConditionsNotMatchException("Только владелец может изменять данные предмета");
         }
@@ -40,7 +39,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto getItem(long itemId) {
         Item item = itemRepository.getItem(itemId);
         if (item != null) {
-            return ItemDtoMapper.map(item);
+            return ItemMapper.makeDto(item);
         } else {
             throw new NotFoundException("Не найден предмет с id: " + itemId);
         }
@@ -50,14 +49,14 @@ public class ItemServiceImpl implements ItemService {
     public List<ItemDto> getUserItems(long userId) {
         userRepository.isUserExists(userId);
         return itemRepository.getUserItems(userId).stream()
-                .map(ItemDtoMapper::map)
+                .map(ItemMapper::makeDto)
                 .toList();
     }
 
     @Override
     public List<ItemDto> itemSearch(String text) {
         return itemRepository.itemSearch(text).stream()
-                .map(ItemDtoMapper::map)
+                .map(ItemMapper::makeDto)
                 .toList();
     }
 

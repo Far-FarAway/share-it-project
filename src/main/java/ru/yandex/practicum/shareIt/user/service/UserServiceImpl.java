@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.shareIt.user.dto.UserDto;
 import ru.yandex.practicum.shareIt.user.User;
-import ru.yandex.practicum.shareIt.user.mapper.UserDtoMapper;
 import ru.yandex.practicum.shareIt.user.mapper.UserMapper;
 import ru.yandex.practicum.shareIt.user.repository.UserRepository;
 
@@ -16,20 +15,20 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto saveUser(UserDto userDto) {
         repository.checkSameEmail(userDto.getEmail());
-        User user = UserMapper.map(userDto);
-        return UserDtoMapper.map(repository.saveUser(user));
+        User user = UserMapper.makePOJO(userDto);
+        return UserMapper.makeDto(repository.saveUser(user));
     }
 
     @Override
     public UserDto getUser(long id) {
-        return UserDtoMapper.map(repository.getUser(id));
+        return UserMapper.makeDto(repository.getUser(id));
     }
 
     @Override
     public UserDto updateUser(long id, UserDto userDto) {
         repository.checkSameEmail(userDto.getEmail());
-        User user = UserMapper.map(userDto);
-        return UserDtoMapper.map(repository.updateUser(id, user));
+        User user = UserMapper.makePOJO(userDto);
+        return UserMapper.makeDto(repository.updateUser(id, user));
     }
 
     @Override

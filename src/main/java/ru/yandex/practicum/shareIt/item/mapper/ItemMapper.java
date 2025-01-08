@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ItemMapper {
-    public static Item map(long userId, ItemDto itemDto) {
+    public static Item makePOJO(long userId, ItemDto itemDto) {
         List<ReviewDto> reviewDtoList = itemDto.getReviews();
         List<Review> reviewList = new ArrayList<>();
         if (reviewDtoList != null) {
@@ -30,6 +30,30 @@ public class ItemMapper {
                 .available(itemDto.getAvailable())
                 .reviews(reviewList)
                 .bookCount(itemDto.getBookCount())
+                .build();
+    }
+
+    public static ItemDto makeDto(Item item) {
+        List<Review> reviewList = item.getReviews();
+        List<ReviewDto> reviewDtoList = new ArrayList<>();
+        if (reviewList != null) {
+            reviewDtoList = reviewList.stream()
+                    .map(review -> {
+                        return ReviewDto.builder()
+                                .reviewerName(review.getReviewerName())
+                                .description(review.getDescription())
+                                .build();
+                    })
+                    .toList();
+        }
+
+        return ItemDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .reviews(reviewDtoList)
+                .bookCount(item.getBookCount())
                 .build();
     }
 }
