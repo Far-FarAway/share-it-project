@@ -20,16 +20,17 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto postItem(long userId, ItemDto itemDto) {
-        userRepository.isUserExists(userId);
-        Item item = itemRepository.postItem(ItemMapper.makePOJO(userId, itemDto));
+        userRepository.existsById(userId);
+        Item item = itemRepository.save(ItemMapper.makePOJO(userId, itemDto));
         return ItemMapper.makeDto(item);
     }
 
     @Override
     public ItemDto updateItem(long userId, long itemId, ItemDto itemDto) {
-        if (itemRepository.checkOwner(userId, itemId)) {
+        if (itemRepository.checkItemOwner(itemId) == userId) {
             Item item = ItemMapper.makePOJO(userId, itemDto);
-            return ItemMapper.makeDto(itemRepository.updateItem(itemId, item));
+            item.setId(itemId);
+            return ItemMapper.makeDto(itemRepository.save(item));
         } else {
             throw new ConditionsNotMatchException("Только владелец может изменять данные предмета");
         }
@@ -37,7 +38,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto getItem(long itemId) {
-        Item item = itemRepository.getItem(itemId);
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new NotFoundException("Предмет с id '" + itemId + "' не найден"));
         if (item != null) {
             return ItemMapper.makeDto(item);
         } else {
@@ -47,23 +49,23 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getUserItems(long userId) {
-        userRepository.isUserExists(userId);
-        return itemRepository.getUserItems(userId).stream()
+        userRepository.existsById(userId);
+        return itemRepository.findByUserId(userId).stream()
                 .map(ItemMapper::makeDto)
                 .toList();
     }
 
     @Override
     public List<ItemDto> itemSearch(String text) {
-        return itemRepository.itemSearch(text).stream()
+        return itemRepository.findByNameContainingOrDescriptionContaining(text).stream()
                 .map(ItemMapper::makeDto)
                 .toList();
     }
 
     @Override
     public void deleteItem(long userId, long itemId) {
-        if (itemRepository.checkOwner(userId, itemId)) {
-            itemRepository.deleteItem(itemId);
+        if (itemRepository.checkItemOwner(itemId) == userId) {
+            itemRepository.deleteById(itemId);
         } else {
             throw new ConditionsNotMatchException("Только владелец может удалить предмет");
         }
