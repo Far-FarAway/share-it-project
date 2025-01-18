@@ -2,6 +2,8 @@ package ru.yandex.practicum.shareIt.user.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.shareIt.exception.NotFoundException;
+import ru.yandex.practicum.shareIt.exception.SameEmailException;
 import ru.yandex.practicum.shareIt.user.dto.UserDto;
 import ru.yandex.practicum.shareIt.user.User;
 import ru.yandex.practicum.shareIt.user.mapper.UserMapper;
@@ -14,25 +16,33 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto saveUser(UserDto userDto) {
-        repository.checkSameEmail(userDto.getEmail());
+        if(repository.existsByEmail(userDto.getEmail())) {
+            throw new SameEmailException("Почта '" + userDto.getEmail() + "' занята");
+        }
+
         User user = UserMapper.makePOJO(userDto);
-        return UserMapper.makeDto(repository.saveUser(user));
+        return UserMapper.makeDto(repository.save(user));
     }
 
     @Override
     public UserDto getUser(long id) {
-        return UserMapper.makeDto(repository.getUser(id));
+        return UserMapper.makeDto(repository.findById(id)
+                .orElseThrow(() -> new NotFoundException("пользователь с id '" + id + "' не найден")));
     }
 
     @Override
     public UserDto updateUser(long id, UserDto userDto) {
-        repository.checkSameEmail(userDto.getEmail());
+        if(repository.existsByEmail(userDto.getEmail())) {
+            throw new SameEmailException("Почта '" + userDto.getEmail() + "' занята");
+        }
+
         User user = UserMapper.makePOJO(userDto);
-        return UserMapper.makeDto(repository.updateUser(id, user));
+        user.setId(id);
+        return UserMapper.makeDto(repository.save(user));
     }
 
     @Override
     public void deleteUser(long id) {
-        repository.deleteUser(id);
+        repository.deleteById(id);
     }
 }
