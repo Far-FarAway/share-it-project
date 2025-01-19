@@ -2,6 +2,7 @@ package ru.yandex.practicum.shareIt.item.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.shareIt.booking.repository.BookingRepository;
 import ru.yandex.practicum.shareIt.exception.ConditionsNotMatchException;
 import ru.yandex.practicum.shareIt.exception.NotFoundException;
 import ru.yandex.practicum.shareIt.item.Item;
@@ -17,20 +18,30 @@ import java.util.List;
 public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
+    private final BookingRepository bookingRepository;
+    private final ItemMapper mapper;
 
     @Override
     public ItemDto postItem(long userId, ItemDto itemDto) {
         userRepository.existsById(userId);
-        Item item = itemRepository.save(ItemMapper.makePOJO(userId, itemDto));
-        return ItemMapper.makeDto(item);
+        Item item = itemRepository.save(mapper.makePOJO(userId, itemDto));
+        return mapper.makeDto(item);
     }
 
     @Override
     public ItemDto updateItem(long userId, long itemId, ItemDto itemDto) {
         if (itemRepository.checkItemOwner(itemId) == userId) {
-            Item item = ItemMapper.makePOJO(userId, itemDto);
+            Item item = mapper.makePOJO(userId, itemDto);
             item.setId(itemId);
-            return ItemMapper.makeDto(itemRepository.save(item));
+
+            Item oldItem = itemRepository.findById(itemId)
+                    .orElseThrow(() -> new NotFoundException("Предмет с id '" + itemId + "' не найден"));
+            item.setName(item.getName() == null ? oldItem.getName() : item.getName());
+            item.setUser(item.getUser() == null ? oldItem.getUser() : item.getUser());
+            item.setAvailable(item.getAvailable() == null ? oldItem.getAvailable() : item.getAvailable());
+            item.setDescription(item.getDescription() == null ? oldItem.getDescription() : item.getDescription());
+
+            return mapper.makeDto(itemRepository.save(item));
         } else {
             throw new ConditionsNotMatchException("Только владелец может изменять данные предмета");
         }
@@ -40,25 +51,24 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto getItem(long itemId) {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Предмет с id '" + itemId + "' не найден"));
-        if (item != null) {
-            return ItemMapper.makeDto(item);
-        } else {
-            throw new NotFoundException("Не найден предмет с id: " + itemId);
-        }
+
+        bookingRepository.existsByItemId(itemId);
+
+        return mapper.makeDto(item);
     }
 
     @Override
     public List<ItemDto> getUserItems(long userId) {
         userRepository.existsById(userId);
         return itemRepository.findByUserId(userId).stream()
-                .map(ItemMapper::makeDto)
+                .map(mapper::makeDto)
                 .toList();
     }
 
     @Override
     public List<ItemDto> itemSearch(String text) {
-        return itemRepository.findByNameContainingOrDescriptionContaining(text).stream()
-                .map(ItemMapper::makeDto)
+        return itemRepository.findByNameContainingOrDescriptionContaining(text.toLowerCase()).stream()
+                .map(mapper::makeDto)
                 .toList();
     }
 

@@ -1,5 +1,6 @@
 package ru.yandex.practicum.shareIt.item.controller;
 
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +19,7 @@ public class ItemControllerImpl {
 
     @PostMapping
     public ItemDto postItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                         @Validated({OnCreate.class}) @RequestBody ItemDto itemDto) {
+                         @Validated({OnCreate.class, Default.class}) @RequestBody ItemDto itemDto) {
         return service.postItem(userId, itemDto);
     }
 

@@ -38,6 +38,13 @@ public class UserServiceImpl implements UserService {
 
         User user = UserMapper.makePOJO(userDto);
         user.setId(id);
+
+        User oldUser = repository.findById(id)
+                .orElseThrow(() -> new NotFoundException("пользователь с id '" + id + "' не найден"));
+
+        user.setEmail(user.getEmail() == null ? oldUser.getEmail() : user.getEmail());
+        user.setName(user.getName() == null ? oldUser.getName() : user.getName());
+
         return UserMapper.makeDto(repository.save(user));
     }
 
