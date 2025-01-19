@@ -26,5 +26,17 @@ public class ErrorHandler {
         return new ErrorResponse(ex.getMessage());
     }
 
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler
+    public ErrorResponse handleInternalServerException(final InternalServerException ex) {
+        return new ErrorResponse("Ошибка На стороне сервера:\n" + ex.getMessage());
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler
+    public ErrorResponse handleBadRequestException(final BadRequestException ex) {
+        return new ErrorResponse(ex.getMessage());
+    }
+
     public record ErrorResponse(String error) {}
 }
