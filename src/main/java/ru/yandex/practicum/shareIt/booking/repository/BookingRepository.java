@@ -98,16 +98,25 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query("SELECT b " +
             "FROM Booking b " +
             "JOIN FETCH b.item i " +
-            "WHERE b.start > CURRENT_TIMESTAMP AND i.id = ?1 " +
-            "ORDER BY b.start ASC")
+            "WHERE i.id = ?1 AND b.start >= CURRENT_TIMESTAMP " +
+            "ORDER BY b.start ASC " +
+            "LIMIT 1")
     Booking getNearliestFutureBooking(long itemId);
 
     @Query("SELECT b " +
             "FROM Booking b " +
             "JOIN FETCH b.item i " +
-            "WHERE b.end > CURRENT_TIMESTAMP AND i.id = ?1 " +
-            "ORDER BY b.end DESC")
+            "WHERE i.id = ?1 AND b.end < CURRENT_TIMESTAMP " +
+            "ORDER BY b.end DESC " +
+            "LIMIT 1")
     Booking getNearliestPastBooking(long itemId);
 
     boolean existsByItemId(long itemId);
+
+    @Query("SELECT CASE WHEN COUNT(b) > 0 THEN true ELSE false END " +
+            "FROM Booking b " +
+            "JOIN b.booker br " +
+            "WHERE br.id = ?1 AND " +
+            "b.end < CURRENT_TIMESTAMP")
+    boolean existsValidBookingForAddComment(long userId);
 }

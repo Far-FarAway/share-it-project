@@ -9,7 +9,6 @@ import ru.yandex.practicum.shareIt.item.Item;
 import ru.yandex.practicum.shareIt.user.User;
 
 import java.time.Instant;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "bookings")

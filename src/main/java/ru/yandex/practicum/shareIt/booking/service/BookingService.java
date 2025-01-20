@@ -1,6 +1,5 @@
 package ru.yandex.practicum.shareIt.booking.service;
 
-import ru.yandex.practicum.shareIt.booking.Booking;
 import ru.yandex.practicum.shareIt.booking.dto.ReceivedBookingDto;
 import ru.yandex.practicum.shareIt.booking.dto.SentBookingDto;
 

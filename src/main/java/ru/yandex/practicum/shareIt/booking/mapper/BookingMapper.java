@@ -1,7 +1,6 @@
 package ru.yandex.practicum.shareIt.booking.mapper;
 
 import lombok.RequiredArgsConstructor;
-import org.hibernate.Hibernate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.shareIt.booking.Booking;
 import ru.yandex.practicum.shareIt.booking.dto.ReceivedBookingDto;
@@ -19,7 +18,7 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 @Component
 public class BookingMapper {
-    private final static DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm:ss");
+    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm:ss");
     private final ItemRepository itemRepository;
     private final UserRepository userRepository;
     private final ItemMapper itemMapper;
@@ -43,7 +42,7 @@ public class BookingMapper {
     public SentBookingDto makeDto(Booking booking) {
         return SentBookingDto.builder()
                 .id(booking.getId())
-                .item(itemMapper.makeDto(booking.getItem()))
+                .item(itemMapper.makeDto(booking.getItem(), false))
                 .booker(UserMapper.makeDto(booking.getBooker()))
                 .status(booking.getStatus())
                 .start(LocalDateTime.ofInstant(booking.getStart(), ZoneId.systemDefault()).toString())

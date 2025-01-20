@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Data;
 import ru.yandex.practicum.shareIt.maker.OnCreate;
 
+import java.util.List;
+
 @Data
 @Builder
 public class ItemDto {
@@ -21,6 +23,7 @@ public class ItemDto {
     @NotNull(groups = {OnCreate.class})
     private Boolean available;
     private Integer bookCount;
-    private String nextStart;
-    private String pastEnd;
+    private String nextBooking;
+    private String lastBooking;
+    private List<CommentDto> comments;
 }

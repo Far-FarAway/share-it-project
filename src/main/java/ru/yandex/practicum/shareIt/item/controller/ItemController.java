@@ -4,6 +4,7 @@ import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.shareIt.item.dto.CommentDto;
 import ru.yandex.practicum.shareIt.item.dto.ItemDto;
 import ru.yandex.practicum.shareIt.item.service.ItemService;
 import ru.yandex.practicum.shareIt.maker.OnCreate;
@@ -14,19 +15,19 @@ import java.util.List;
 @RequestMapping("/items")
 @RequiredArgsConstructor
 @Validated
-public class ItemControllerImpl {
+public class ItemController {
     private final ItemService service;
 
     @PostMapping
     public ItemDto postItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                         @Validated({OnCreate.class, Default.class}) @RequestBody ItemDto itemDto) {
+                            @Validated({OnCreate.class, Default.class}) @RequestBody ItemDto itemDto) {
         return service.postItem(userId, itemDto);
     }
 
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                           @PathVariable long itemId,
-                           @RequestBody ItemDto itemDto) {
+                              @PathVariable long itemId,
+                              @RequestBody ItemDto itemDto) {
         return service.updateItem(userId, itemId, itemDto);
     }
 
@@ -45,8 +46,16 @@ public class ItemControllerImpl {
         return service.itemSearch(text);
     }
 
-    @DeleteMapping
-    public void deleteItem(@RequestHeader("X-Sharer-User-Id") long userId, long itemId) {
+    @DeleteMapping("/{itemId}")
+    public void deleteItem(@RequestHeader("X-Sharer-User-Id") long userId, @PathVariable long itemId) {
         service.deleteItem(userId, itemId);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") long userId,
+                                 @PathVariable long itemId,
+                                 @RequestBody CommentDto commentDto) {
+        System.out.println("пиздосик");
+        return service.addComment(userId, itemId, commentDto);
     }
 }

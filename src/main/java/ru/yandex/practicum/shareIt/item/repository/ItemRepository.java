@@ -19,4 +19,6 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
             "FROM Item i " +
             "WHERE i.id = ?1")
     long checkItemOwner(long itemId);
+
+
 }

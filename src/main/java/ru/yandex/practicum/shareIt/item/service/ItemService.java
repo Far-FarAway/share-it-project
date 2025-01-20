@@ -1,6 +1,7 @@
 package ru.yandex.practicum.shareIt.item.service;
 
 import org.springframework.transaction.annotation.Transactional;
+import ru.yandex.practicum.shareIt.item.dto.CommentDto;
 import ru.yandex.practicum.shareIt.item.dto.ItemDto;
 
 import java.util.List;
@@ -21,4 +22,7 @@ public interface ItemService {
 
     @Transactional
     void deleteItem(long userId, long itemId);
+
+    @Transactional
+    CommentDto addComment(long userId, long itemId, CommentDto commentDto);
 }
