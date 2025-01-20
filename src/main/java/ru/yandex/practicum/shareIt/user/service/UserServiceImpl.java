@@ -16,7 +16,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto saveUser(UserDto userDto) {
-        if(repository.existsByEmail(userDto.getEmail())) {
+        if (repository.existsByEmail(userDto.getEmail())) {
             throw new SameEmailException("Почта '" + userDto.getEmail() + "' занята");
         }
 
@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(long id, UserDto userDto) {
-        if(repository.existsByEmail(userDto.getEmail())) {
+        if (repository.existsByEmail(userDto.getEmail())) {
             throw new SameEmailException("Почта '" + userDto.getEmail() + "' занята");
         }
 
