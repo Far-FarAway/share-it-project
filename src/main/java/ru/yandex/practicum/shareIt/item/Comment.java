@@ -1,10 +1,8 @@
 package ru.yandex.practicum.shareIt.item;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.time.Instant;
 
@@ -14,16 +12,17 @@ import java.time.Instant;
 @NoArgsConstructor
 @Entity
 @Table(name = "comments")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "comment_id")
-    private Long id;
+    Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
-    private Item item;
+    Item item;
     @Column
-    private String text;
+    String text;
     @Column
-    private Instant created = Instant.now();
+    Instant created = Instant.now();
 }

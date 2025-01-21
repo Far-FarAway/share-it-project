@@ -1,15 +1,18 @@
 package ru.yandex.practicum.shareIt.item.dto;
 
 import jakarta.validation.constraints.Positive;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class CommentDto {
     @Positive
-    private long id;
-    private String authorName;
-    private String text;
-    private String created;
+    long id;
+    String authorName;
+    String text;
+    String created;
 }

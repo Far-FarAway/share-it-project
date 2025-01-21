@@ -1,6 +1,8 @@
 package ru.yandex.practicum.shareIt.booking.service;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.shareIt.booking.BookStatus;
 import ru.yandex.practicum.shareIt.booking.Booking;
@@ -19,11 +21,12 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class BookingServiceImpl implements BookingService {
-    private final BookingRepository bookingRepository;
-    private final UserRepository userRepository;
-    private final BookingMapper mapper;
-    private final Comparator<Booking> comparator = new Comparator<Booking>() {
+    BookingRepository bookingRepository;
+    UserRepository userRepository;
+    BookingMapper mapper;
+    Comparator<Booking> comparator = new Comparator<Booking>() {
         @Override
         public int compare(Booking o1, Booking o2) {
             if (o1.getStart().isAfter(o2.getStart())) {

@@ -1,10 +1,8 @@
 package ru.yandex.practicum.shareIt.item;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import ru.yandex.practicum.shareIt.user.User;
 
 @Data
@@ -13,20 +11,21 @@ import ru.yandex.practicum.shareIt.user.User;
 @NoArgsConstructor
 @Entity
 @Table(name = "items")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "item_id")
-    private Long id;
+    Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    User user;
     @Column(name = "item_name")
-    private String name;
+    String name;
     @Column
-    private String description;
+    String description;
     @Column
-    private Boolean available;
+    Boolean available;
     @Column(name = "book_count")
-    private Integer bookCount;
+    Integer bookCount;
 }

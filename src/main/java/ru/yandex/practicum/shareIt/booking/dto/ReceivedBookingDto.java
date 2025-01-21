@@ -2,21 +2,24 @@ package ru.yandex.practicum.shareIt.booking.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 import ru.yandex.practicum.shareIt.booking.BookStatus;
 import ru.yandex.practicum.shareIt.maker.OnCreate;
 
 @Data
 @Builder
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class ReceivedBookingDto {
     @NotNull
-    private Long itemId;
-    private BookStatus status;
+    Long itemId;
+    BookStatus status;
     @NotNull(groups = {OnCreate.class})
     @NotBlank(groups = {OnCreate.class})
-    private String start;
+    String start;
     @NotNull(groups = {OnCreate.class})
     @NotBlank(groups = {OnCreate.class})
-    private String end;
+    String end;
 }

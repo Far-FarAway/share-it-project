@@ -1,10 +1,8 @@
 package ru.yandex.practicum.shareIt.booking;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 import ru.yandex.practicum.shareIt.item.Item;
 import ru.yandex.practicum.shareIt.user.User;
 
@@ -16,22 +14,23 @@ import java.time.Instant;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class Booking {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "booking_id")
-    private Long id;
+    Long id;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
-    private Item item;
+    Item item;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "booker_id")
-    private User booker;
+    User booker;
     @Enumerated(EnumType.STRING)
-    private BookStatus status;
+    BookStatus status;
     @Column(name = "start_date")
-    private Instant start;
+    Instant start;
     @Column(name = "end_date")
-    private Instant end;
+    Instant end;
 
 }

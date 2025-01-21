@@ -1,6 +1,8 @@
 package ru.yandex.practicum.shareIt.item.service;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.shareIt.booking.repository.BookingRepository;
 import ru.yandex.practicum.shareIt.exception.BadRequestException;
@@ -20,13 +22,14 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class ItemServiceImpl implements ItemService {
-    private final ItemRepository itemRepository;
-    private final UserRepository userRepository;
-    private final BookingRepository bookingRepository;
-    private final CommentRepository commentRepository;
-    private final CommentMapper commentMapper;
-    private final ItemMapper itemMapper;
+    ItemRepository itemRepository;
+    UserRepository userRepository;
+    BookingRepository bookingRepository;
+    CommentRepository commentRepository;
+    CommentMapper commentMapper;
+    ItemMapper itemMapper;
 
     @Override
     public ItemDto postItem(long userId, ItemDto itemDto) {

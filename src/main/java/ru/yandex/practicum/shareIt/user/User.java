@@ -1,10 +1,8 @@
 package ru.yandex.practicum.shareIt.user;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @AllArgsConstructor
@@ -12,13 +10,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @Entity
 @Table(name = "users")
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long id;
+    Long id;
     @Column(name = "user_name")
-    private String name;
+    String name;
     @Column
-    private String email;
+    String email;
 }

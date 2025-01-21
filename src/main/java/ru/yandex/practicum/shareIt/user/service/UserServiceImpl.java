@@ -1,6 +1,8 @@
 package ru.yandex.practicum.shareIt.user.service;
 
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.shareIt.exception.NotFoundException;
 import ru.yandex.practicum.shareIt.exception.SameEmailException;
@@ -11,8 +13,9 @@ import ru.yandex.practicum.shareIt.user.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 public class UserServiceImpl implements UserService {
-    private final UserRepository repository;
+    UserRepository repository;
 
     @Override
     public UserDto saveUser(UserDto userDto) {
