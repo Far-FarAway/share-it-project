@@ -142,7 +142,7 @@ public class BookingServiceImpl implements BookingService {
             }
             default -> {
                 if (ownerOrUser.equals("user")) {
-                    return bookingRepository.getAllUserBookings(id);
+                    return bookingRepository.findByBookerId(id);
                 } else {
                     return bookingRepository.getAllOwnerBookings(id);
                 }

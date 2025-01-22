@@ -54,11 +54,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "b.status = 'REJECTED'")
     List<Booking> getRejectedOwnerBookings(long ownerId);
 
-    @Query("SELECT b " +
-            "FROM Booking b " +
-            "JOIN FETCH b.booker u " +
-            "WHERE u.id = ?1")
-    List<Booking> getAllUserBookings(long userId);
+    List<Booking> findByBookerId(long bookerId);
 
     @Query("SELECT b " +
             "FROM Booking b " +
