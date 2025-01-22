@@ -1,18 +1,18 @@
 package ru.yandex.practicum.shareIt.booking.service;
 
-import ru.yandex.practicum.shareIt.booking.dto.ReceivedBookingDto;
-import ru.yandex.practicum.shareIt.booking.dto.SentBookingDto;
+import ru.yandex.practicum.shareIt.booking.dto.RequestBookingDto;
+import ru.yandex.practicum.shareIt.booking.dto.ResponseBookingDto;
 
 import java.util.List;
 
 public interface BookingService {
-    SentBookingDto bookItem(long userId, ReceivedBookingDto receivedBookingDto);
+    ResponseBookingDto bookItem(long userId, RequestBookingDto requestBookingDto);
 
-    SentBookingDto changeBookStatus(long ownerId, long bookingId, boolean approved);
+    ResponseBookingDto changeBookStatus(long ownerId, long bookingId, boolean approved);
 
-    SentBookingDto getBooking(long bookingId);
+    ResponseBookingDto getBooking(long bookingId);
 
-    List<SentBookingDto> getUserBookings(Long userId, String state);
+    List<ResponseBookingDto> getUserBookings(Long userId, String state);
 
-    List<SentBookingDto> getOwnerBookings(Long ownerId, String state);
+    List<ResponseBookingDto> getOwnerBookings(Long ownerId, String state);
 }

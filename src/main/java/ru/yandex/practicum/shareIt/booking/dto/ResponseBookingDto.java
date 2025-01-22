@@ -11,7 +11,7 @@ import ru.yandex.practicum.shareIt.user.dto.UserDto;
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class SentBookingDto {
+public class ResponseBookingDto {
     Long id;
     ItemDto item;
     UserDto booker;

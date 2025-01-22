@@ -3,8 +3,8 @@ package ru.yandex.practicum.shareIt.booking.mapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.shareIt.booking.Booking;
-import ru.yandex.practicum.shareIt.booking.dto.ReceivedBookingDto;
-import ru.yandex.practicum.shareIt.booking.dto.SentBookingDto;
+import ru.yandex.practicum.shareIt.booking.dto.RequestBookingDto;
+import ru.yandex.practicum.shareIt.booking.dto.ResponseBookingDto;
 import ru.yandex.practicum.shareIt.exception.NotFoundException;
 import ru.yandex.practicum.shareIt.item.mapper.ItemMapper;
 import ru.yandex.practicum.shareIt.item.repository.ItemRepository;
@@ -23,24 +23,24 @@ public class BookingMapper {
     private final UserRepository userRepository;
     private final ItemMapper itemMapper;
 
-    public Booking makePOJO(Long userId, ReceivedBookingDto receivedBookingDto) {
+    public Booking makePOJO(Long userId, RequestBookingDto requestBookingDto) {
         return Booking.builder()
-                .item(itemRepository.findById(receivedBookingDto.getItemId()).orElseThrow(() ->
-                        new NotFoundException("Предмет с id '" + receivedBookingDto.getItemId() + "' не найден")))
+                .item(itemRepository.findById(requestBookingDto.getItemId()).orElseThrow(() ->
+                        new NotFoundException("Предмет с id '" + requestBookingDto.getItemId() + "' не найден")))
                 .booker(userRepository.findById(userId).orElseThrow(() ->
                         new NotFoundException("Пользователь с id '" + userId + "' не найден")))
-                .status(receivedBookingDto.getStatus())
-                .start(LocalDateTime.parse(receivedBookingDto.getStart())
+                .status(requestBookingDto.getStatus())
+                .start(LocalDateTime.parse(requestBookingDto.getStart())
                         .atZone(ZoneId.systemDefault())
                         .toInstant())
-                .end(LocalDateTime.parse(receivedBookingDto.getEnd())
+                .end(LocalDateTime.parse(requestBookingDto.getEnd())
                         .atZone(ZoneId.systemDefault())
                         .toInstant())
                 .build();
     }
 
-    public SentBookingDto makeDto(Booking booking) {
-        return SentBookingDto.builder()
+    public ResponseBookingDto makeDto(Booking booking) {
+        return ResponseBookingDto.builder()
                 .id(booking.getId())
                 .item(itemMapper.makeDto(booking.getItem(), false))
                 .booker(UserMapper.makeDto(booking.getBooker()))

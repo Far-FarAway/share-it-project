@@ -12,7 +12,7 @@ import ru.yandex.practicum.shareIt.maker.OnCreate;
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class ReceivedBookingDto {
+public class RequestBookingDto {
     @NotNull
     Long itemId;
     BookStatus status;

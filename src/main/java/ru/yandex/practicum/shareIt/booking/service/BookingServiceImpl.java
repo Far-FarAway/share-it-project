@@ -6,8 +6,8 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.shareIt.booking.BookStatus;
 import ru.yandex.practicum.shareIt.booking.Booking;
-import ru.yandex.practicum.shareIt.booking.dto.ReceivedBookingDto;
-import ru.yandex.practicum.shareIt.booking.dto.SentBookingDto;
+import ru.yandex.practicum.shareIt.booking.dto.RequestBookingDto;
+import ru.yandex.practicum.shareIt.booking.dto.ResponseBookingDto;
 import ru.yandex.practicum.shareIt.booking.mapper.BookingMapper;
 import ru.yandex.practicum.shareIt.booking.repository.BookingRepository;
 import ru.yandex.practicum.shareIt.exception.BadRequestException;
@@ -40,8 +40,8 @@ public class BookingServiceImpl implements BookingService {
     };
 
     @Override
-    public SentBookingDto bookItem(long userId, ReceivedBookingDto receivedBookingDto) {
-        Booking booking = mapper.makePOJO(userId, receivedBookingDto);
+    public ResponseBookingDto bookItem(long userId, RequestBookingDto requestBookingDto) {
+        Booking booking = mapper.makePOJO(userId, requestBookingDto);
 
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь с id '" + userId + "' не найден");
@@ -59,7 +59,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public SentBookingDto changeBookStatus(long ownerId, long bookingId, boolean approved) {
+    public ResponseBookingDto changeBookStatus(long ownerId, long bookingId, boolean approved) {
         BookStatus status = approved ? BookStatus.APPROVED : BookStatus.REJECTED;
         Booking booking = bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Бронь с id '" + bookingId + "' не найдена"));
@@ -74,13 +74,13 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public SentBookingDto getBooking(long bookingId) {
+    public ResponseBookingDto getBooking(long bookingId) {
         return mapper.makeDto(bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Бронь с id '" + bookingId + "' не найдена")));
     }
 
     @Override
-    public List<SentBookingDto> getUserBookings(Long userId, String state) {
+    public List<ResponseBookingDto> getUserBookings(Long userId, String state) {
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь с id '" + userId + "' не найден");
         }
@@ -92,7 +92,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public List<SentBookingDto> getOwnerBookings(Long ownerId, String state) {
+    public List<ResponseBookingDto> getOwnerBookings(Long ownerId, String state) {
         if (!userRepository.existsById(ownerId)) {
             throw new NotFoundException("Пользователь с id '" + ownerId + "' не найден");
         }
