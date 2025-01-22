@@ -1,5 +1,6 @@
 package ru.yandex.practicum.shareIt.user.controller;
 
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,7 @@ public class UserControllerImpl {
     private final UserService service;
 
     @PostMapping
-    public UserDto saveUser(@Validated({OnCreate.class}) @RequestBody UserDto userDto) {
+    public UserDto saveUser(@Validated({OnCreate.class, Default.class}) @RequestBody UserDto userDto) {
         return service.saveUser(userDto);
     }
 
