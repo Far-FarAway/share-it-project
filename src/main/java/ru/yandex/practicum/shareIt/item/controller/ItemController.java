@@ -55,7 +55,6 @@ public class ItemController {
     public CommentDto addComment(@RequestHeader("X-Sharer-User-Id") long userId,
                                  @PathVariable long itemId,
                                  @RequestBody CommentDto commentDto) {
-        System.out.println("пиздосик");
         return service.addComment(userId, itemId, commentDto);
     }
 }

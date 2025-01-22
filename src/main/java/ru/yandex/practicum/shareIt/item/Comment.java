@@ -21,8 +21,11 @@ public class Comment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "item_id")
     Item item;
+    @Column(name = "author_name")
+    String authorName;
     @Column
     String text;
     @Column
+    @Builder.Default
     Instant created = Instant.now();
 }

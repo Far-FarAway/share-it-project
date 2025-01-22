@@ -1,6 +1,7 @@
 package ru.yandex.practicum.shareIt.item.service;
 
 import org.springframework.transaction.annotation.Transactional;
+import ru.yandex.practicum.shareIt.item.Item;
 import ru.yandex.practicum.shareIt.item.dto.CommentDto;
 import ru.yandex.practicum.shareIt.item.dto.ItemDto;
 
@@ -25,4 +26,10 @@ public interface ItemService {
 
     @Transactional
     CommentDto addComment(long userId, long itemId, CommentDto commentDto);
+
+    @Transactional
+    ItemDto prepareAndMakeItemDto(Item item, boolean initDate);
+
+    @Transactional
+    Item prepareAndMakeItemPOJO(long userId, ItemDto itemDto);
 }

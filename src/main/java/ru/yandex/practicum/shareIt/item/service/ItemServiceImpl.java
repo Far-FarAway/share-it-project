@@ -4,6 +4,7 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.shareIt.booking.Booking;
 import ru.yandex.practicum.shareIt.booking.repository.BookingRepository;
 import ru.yandex.practicum.shareIt.exception.BadRequestException;
 import ru.yandex.practicum.shareIt.exception.ConditionsNotMatchException;
@@ -16,6 +17,7 @@ import ru.yandex.practicum.shareIt.item.mapper.CommentMapper;
 import ru.yandex.practicum.shareIt.item.mapper.ItemMapper;
 import ru.yandex.practicum.shareIt.item.repository.CommentRepository;
 import ru.yandex.practicum.shareIt.item.repository.ItemRepository;
+import ru.yandex.practicum.shareIt.user.User;
 import ru.yandex.practicum.shareIt.user.repository.UserRepository;
 
 import java.util.List;
@@ -34,14 +36,14 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public ItemDto postItem(long userId, ItemDto itemDto) {
         userRepository.existsById(userId);
-        Item item = itemRepository.save(itemMapper.makePOJO(userId, itemDto));
-        return itemMapper.makeDto(item, false);
+        Item item = itemRepository.save(prepareAndMakeItemPOJO(userId, itemDto));
+        return prepareAndMakeItemDto(item, false);
     }
 
     @Override
     public ItemDto updateItem(long userId, long itemId, ItemDto itemDto) {
         if (itemRepository.checkItemOwner(itemId) == userId) {
-            Item item = itemMapper.makePOJO(userId, itemDto);
+            Item item = prepareAndMakeItemPOJO(userId, itemDto);
             item.setId(itemId);
 
             Item oldItem = itemRepository.findById(itemId)
@@ -51,7 +53,7 @@ public class ItemServiceImpl implements ItemService {
             item.setAvailable(item.getAvailable() == null ? oldItem.getAvailable() : item.getAvailable());
             item.setDescription(item.getDescription() == null ? oldItem.getDescription() : item.getDescription());
 
-            return itemMapper.makeDto(itemRepository.save(item), false);
+            return prepareAndMakeItemDto(itemRepository.save(item), false);
         } else {
             throw new ConditionsNotMatchException("Только владелец может изменять данные предмета");
         }
@@ -64,21 +66,21 @@ public class ItemServiceImpl implements ItemService {
 
         bookingRepository.existsByItemId(itemId);
 
-        return itemMapper.makeDto(item, false);
+        return prepareAndMakeItemDto(item, false);
     }
 
     @Override
     public List<ItemDto> getUserItems(long userId) {
         userRepository.existsById(userId);
         return itemRepository.findByUserId(userId).stream()
-                .map(item -> itemMapper.makeDto(item, true))
+                .map(item -> prepareAndMakeItemDto(item, true))
                 .toList();
     }
 
     @Override
     public List<ItemDto> itemSearch(String text) {
         return itemRepository.findByNameContainingOrDescriptionContaining(text.toLowerCase()).stream()
-                .map(item -> itemMapper.makeDto(item, false))
+                .map(item -> prepareAndMakeItemDto(item, false))
                 .toList();
     }
 
@@ -98,9 +100,43 @@ public class ItemServiceImpl implements ItemService {
                     " нужно воспользоваться им");
         }
 
-        commentDto.setId(itemId);
-        Comment comment = commentMapper.makePOJO(commentDto);
+        Item item = itemRepository.findById(itemId)
+                .orElseThrow(() -> new NotFoundException("Предмет с id '" + itemId +
+                        "' не найден"));
 
-        return commentMapper.makeDto(userId, commentRepository.save(comment));
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователь с id '" + userId + "' не найден"));
+
+        commentDto.setId(itemId);
+        commentDto.setAuthorName(user.getName());
+        Comment comment = commentMapper.makePOJO(item, commentDto);
+
+        return commentMapper.makeDto(commentRepository.save(comment));
+    }
+
+    @Override
+    public ItemDto prepareAndMakeItemDto(Item item, boolean initDate) {
+        long id = item.getId();
+        Booking latestBooking = null;
+        Booking nextBooking = null;
+
+        if (bookingRepository.existsByItemId(id) && initDate) {
+            latestBooking = bookingRepository.getNearliestPastBooking(id);
+            nextBooking = bookingRepository.getNearliestFutureBooking(id);
+        }
+
+        List<CommentDto> comments = commentRepository.findByItemId(id).stream()
+                .map(commentMapper::makeDto)
+                .toList();
+
+        return itemMapper.makeDto(item, comments, nextBooking, latestBooking);
+    }
+
+    @Override
+    public Item prepareAndMakeItemPOJO(long userId, ItemDto itemDto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("Пользователь с id '" + userId + "' не найден"));
+
+        return itemMapper.makePOJO(user, itemDto);
     }
 }

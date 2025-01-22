@@ -13,6 +13,11 @@ import ru.yandex.practicum.shareIt.booking.repository.BookingRepository;
 import ru.yandex.practicum.shareIt.exception.BadRequestException;
 import ru.yandex.practicum.shareIt.exception.ConditionsNotMatchException;
 import ru.yandex.practicum.shareIt.exception.NotFoundException;
+import ru.yandex.practicum.shareIt.item.Item;
+import ru.yandex.practicum.shareIt.item.dto.ItemDto;
+import ru.yandex.practicum.shareIt.item.repository.ItemRepository;
+import ru.yandex.practicum.shareIt.item.service.ItemService;
+import ru.yandex.practicum.shareIt.user.User;
 import ru.yandex.practicum.shareIt.user.repository.UserRepository;
 
 import java.time.Instant;
@@ -25,6 +30,8 @@ import java.util.List;
 public class BookingServiceImpl implements BookingService {
     BookingRepository bookingRepository;
     UserRepository userRepository;
+    ItemRepository itemRepository;
+    ItemService itemService;
     BookingMapper mapper;
     Comparator<Booking> comparator = new Comparator<Booking>() {
         @Override
@@ -41,7 +48,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public ResponseBookingDto bookItem(long userId, RequestBookingDto requestBookingDto) {
-        Booking booking = mapper.makePOJO(userId, requestBookingDto);
+        Booking booking = prepareAndMakeBookingPOJO(userId, requestBookingDto);
 
         if (!userRepository.existsById(userId)) {
             throw new NotFoundException("Пользователь с id '" + userId + "' не найден");
@@ -55,7 +62,7 @@ public class BookingServiceImpl implements BookingService {
 
         booking.setStatus(BookStatus.WAITING);
 
-        return mapper.makeDto(bookingRepository.save(booking));
+        return prepareAndMakeBookingDto(bookingRepository.save(booking));
     }
 
     @Override
@@ -70,12 +77,12 @@ public class BookingServiceImpl implements BookingService {
 
         booking.setStatus(status);
 
-        return mapper.makeDto(bookingRepository.save(booking));
+        return prepareAndMakeBookingDto(bookingRepository.save(booking));
     }
 
     @Override
     public ResponseBookingDto getBooking(long bookingId) {
-        return mapper.makeDto(bookingRepository.findById(bookingId)
+        return prepareAndMakeBookingDto(bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new NotFoundException("Бронь с id '" + bookingId + "' не найдена")));
     }
 
@@ -87,7 +94,7 @@ public class BookingServiceImpl implements BookingService {
 
         return getBookingsByState(userId, state, "user").stream()
                 .sorted(comparator)
-                .map(mapper::makeDto)
+                .map(this::prepareAndMakeBookingDto)
                 .toList();
     }
 
@@ -99,7 +106,7 @@ public class BookingServiceImpl implements BookingService {
 
         return getBookingsByState(ownerId, state, "owner").stream()
                 .sorted(comparator)
-                .map(mapper::makeDto)
+                .map(this::prepareAndMakeBookingDto)
                 .toList();
     }
 
@@ -168,5 +175,23 @@ public class BookingServiceImpl implements BookingService {
         if (booking.getStart().isBefore(Instant.now())) {
             throw new BadRequestException("Начало бронирования не может быть в прошлом");
         }
+    }
+
+    @Override
+    public Booking prepareAndMakeBookingPOJO(long userId, RequestBookingDto requestBookingDto) {
+        User booker = userRepository.findById(userId).orElseThrow(() ->
+                new NotFoundException("Пользователь с id '" + userId + "' не найден"));
+
+        Item item = itemRepository.findById(requestBookingDto.getItemId()).orElseThrow(() ->
+                new NotFoundException("Предмет с id '" + requestBookingDto.getItemId() + "' не найден"));
+
+        return mapper.makePOJO(booker, item, requestBookingDto);
+    }
+
+    @Override
+    public ResponseBookingDto prepareAndMakeBookingDto(Booking booking) {
+        ItemDto itemDto = itemService.prepareAndMakeItemDto(booking.getItem(), false);
+
+        return mapper.makeDto(itemDto, booking);
     }
 }
