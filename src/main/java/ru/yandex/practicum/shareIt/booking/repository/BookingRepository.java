@@ -34,7 +34,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "WHERE i.id = ?1 AND b.start >= CURRENT_TIMESTAMP " +
             "ORDER BY b.start ASC " +
             "LIMIT 1")
-    Booking getNearliestFutureBooking(long itemId);
+    Booking getNearliestFutureBooking(Long itemId);
 
     @Query("SELECT b " +
             "FROM Booking b " +
@@ -42,7 +42,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             "WHERE i.id = ?1 AND b.end < CURRENT_TIMESTAMP " +
             "ORDER BY b.end DESC " +
             "LIMIT 1")
-    Booking getNearliestPastBooking(long itemId);
+    Booking getNearliestPastBooking(Long itemId);
 
     boolean existsByItemId(long itemId);
 

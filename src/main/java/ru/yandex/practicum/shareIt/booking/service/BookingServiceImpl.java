@@ -23,6 +23,8 @@ import ru.yandex.practicum.shareIt.user.repository.UserRepository;
 import java.time.Instant;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
@@ -112,51 +114,33 @@ public class BookingServiceImpl implements BookingService {
 
     private List<Booking> getBookingsByState(Long id, String state, String ownerOrUser) {
         Instant now = Instant.now();
+        Map<String, Function<Long, List<Booking>>> userBookingsMap = Map.of(
+                "current", userId -> bookingRepository.findByBookerIdAndStartBeforeAndEndAfter(id, now, now),
+                "past", userId -> bookingRepository.findByBookerIdAndEndBefore(id, now),
+                "future", userId -> bookingRepository.findByBookerIdAndStartAfter(id, now),
+                "waiting", userId -> bookingRepository
+                        .findByBookerIdAndStatusContaining(id, "WAITING"),
+                "rejected", userId -> bookingRepository
+                        .findByBookerIdAndStatusContaining(id, "REJECTED")
+        );
 
-        switch (state) {
-            case "current" -> {
-                if (ownerOrUser.equals("user")) {
-                    return bookingRepository.findByBookerIdAndStartBeforeAndEndAfter(id, now, now);
-                } else {
-                    return bookingRepository.findByItemUserIdAndStartBeforeAndEndAfter(id, now, now);
-                }
-            }
-            case "past" -> {
-                if (ownerOrUser.equals("user")) {
-                    return bookingRepository.findByBookerIdAndEndBefore(id, now);
-                } else {
-                    return bookingRepository.findByItemUserIdAndEndBefore(id, now);
-                }
-            }
-            case "future" -> {
-                if (ownerOrUser.equals("user")) {
-                    return bookingRepository.findByBookerIdAndStartAfter(id, now);
-                } else {
-                    return bookingRepository.findByItemUserIdAndStartAfter(id, now);
-                }
-            }
-            case "waiting" -> {
-                if (ownerOrUser.equals("user")) {
-                    return bookingRepository.findByBookerIdAndStatusContaining(id,  "WAITING");
-                } else {
-                    return bookingRepository.findByItemUserIdAndStatusContaining(id, "WAITING");
-                }
-            }
-            case "rejected" -> {
-                if (ownerOrUser.equals("user")) {
-                    return bookingRepository.findByBookerIdAndStatusContaining(id, "REJECTED");
-                } else {
-                    return bookingRepository.findByItemUserIdAndStatusContaining(id, "REJECTED");
-                }
-            }
-            default -> {
-                if (ownerOrUser.equals("user")) {
-                    return bookingRepository.findByBookerId(id);
-                } else {
-                    return bookingRepository.findByItemUserId(id);
-                }
-            }
-        }
+        Map<String, Function<Long, List<Booking>>> ownerBookingsMap = Map.of(
+                "current", ownerId -> bookingRepository
+                        .findByItemUserIdAndStartBeforeAndEndAfter(id, now, now),
+                "past", ownerId -> bookingRepository.findByItemUserIdAndEndBefore(id, now),
+                "future", ownerId -> bookingRepository.findByItemUserIdAndStartAfter(id, now),
+                "waiting", ownerId -> bookingRepository
+                        .findByItemUserIdAndStatusContaining(id, "WAITING"),
+                "rejected", ownerId -> bookingRepository
+                        .findByItemUserIdAndStatusContaining(id, "REJECTED")
+        );
+
+        Map<String, Function<Long, List<Booking>>> selectedMap =
+                ownerOrUser.equals("user") ? userBookingsMap : ownerBookingsMap;
+
+        return selectedMap.getOrDefault(state,
+                ownerOrUser.equals("user") ? bookingRepository::findByBookerId : bookingRepository::findByItemUserId
+        ).apply(id);
     }
 
     private void validated(Booking booking) {
