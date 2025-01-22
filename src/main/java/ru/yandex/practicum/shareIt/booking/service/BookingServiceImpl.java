@@ -104,47 +104,49 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private List<Booking> getBookingsByState(Long id, String state, String ownerOrUser) {
+        Instant now = Instant.now();
+
         switch (state) {
             case "current" -> {
                 if (ownerOrUser.equals("user")) {
-                    return bookingRepository.getCurrentUserBookings(id);
+                    return bookingRepository.findByBookerIdAndStartBeforeAndEndAfter(id, now, now);
                 } else {
-                    return bookingRepository.getCurrentOwnerBookings(id);
+                    return bookingRepository.findByItemUserIdAndStartBeforeAndEndAfter(id, now, now);
                 }
             }
             case "past" -> {
                 if (ownerOrUser.equals("user")) {
-                    return bookingRepository.getPastUserBookings(id);
+                    return bookingRepository.findByBookerIdAndEndBefore(id, now);
                 } else {
-                    return bookingRepository.getPastOwnerBookings(id);
+                    return bookingRepository.findByItemUserIdAndEndBefore(id, now);
                 }
             }
             case "future" -> {
                 if (ownerOrUser.equals("user")) {
-                    return bookingRepository.getFutureUserBookings(id);
+                    return bookingRepository.findByBookerIdAndStartAfter(id, now);
                 } else {
-                    return bookingRepository.getFutureOwnerBookings(id);
+                    return bookingRepository.findByItemUserIdAndStartAfter(id, now);
                 }
             }
             case "waiting" -> {
                 if (ownerOrUser.equals("user")) {
-                    return bookingRepository.getWaitingUserBookings(id);
+                    return bookingRepository.findByBookerIdAndStatusContaining(id,  "WAITING");
                 } else {
-                    return bookingRepository.getWaitingOwnerBookings(id);
+                    return bookingRepository.findByItemUserIdAndStatusContaining(id, "WAITING");
                 }
             }
             case "rejected" -> {
                 if (ownerOrUser.equals("user")) {
-                    return bookingRepository.getRejectedUserBookings(id);
+                    return bookingRepository.findByBookerIdAndStatusContaining(id, "REJECTED");
                 } else {
-                    return bookingRepository.getRejectedOwnerBookings(id);
+                    return bookingRepository.findByItemUserIdAndStatusContaining(id, "REJECTED");
                 }
             }
             default -> {
                 if (ownerOrUser.equals("user")) {
                     return bookingRepository.findByBookerId(id);
                 } else {
-                    return bookingRepository.getAllOwnerBookings(id);
+                    return bookingRepository.findByItemUserId(id);
                 }
             }
         }

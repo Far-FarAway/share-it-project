@@ -4,92 +4,29 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.yandex.practicum.shareIt.booking.Booking;
 
+import java.time.Instant;
 import java.util.List;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
-    @Query("SELECT b " +
-            "FROM Booking b " +
-            "JOIN FETCH b.item i " +
-            "JOIN FETCH i.user u " +
-            "WHERE u.id = ?1")
-    List<Booking> getAllOwnerBookings(long ownerId);
+    List<Booking> findByItemUserId(long ownerId);
 
-    @Query("SELECT b " +
-            "FROM Booking b " +
-            "JOIN FETCH b.item i " +
-            "JOIN FETCH i.user u " +
-            "WHERE u.id = ?1 AND " +
-            "CURRENT_TIMESTAMP BETWEEN b.start AND b.end")
-    List<Booking> getCurrentOwnerBookings(long ownerId);
+    List<Booking> findByItemUserIdAndStartBeforeAndEndAfter(long ownerId, Instant now1, Instant now2);
 
-    @Query("SELECT b " +
-            "FROM Booking b " +
-            "JOIN FETCH b.item i " +
-            "JOIN FETCH i.user u " +
-            "WHERE u.id = ?1 AND " +
-            "CURRENT_TIMESTAMP > b.end")
-    List<Booking> getPastOwnerBookings(long ownerId);
+    List<Booking> findByItemUserIdAndEndBefore(long ownerId, Instant now);
 
-    @Query("SELECT b " +
-            "FROM Booking b " +
-            "JOIN FETCH b.item i " +
-            "JOIN FETCH i.user u " +
-            "WHERE u.id = ?1 AND " +
-            "CURRENT_TIMESTAMP < b.start")
-    List<Booking> getFutureOwnerBookings(long ownerId);
+    List<Booking> findByItemUserIdAndStartAfter(long ownerId, Instant now);
 
-    @Query("SELECT b " +
-            "FROM Booking b " +
-            "JOIN FETCH b.item i " +
-            "JOIN FETCH i.user u " +
-            "WHERE u.id = ?1 AND " +
-            "b.status = 'WAITING'")
-    List<Booking> getWaitingOwnerBookings(long ownerId);
-
-    @Query("SELECT b " +
-            "FROM Booking b " +
-            "JOIN FETCH b.item i " +
-            "JOIN FETCH i.user u " +
-            "WHERE u.id = ?1 AND " +
-            "b.status = 'REJECTED'")
-    List<Booking> getRejectedOwnerBookings(long ownerId);
+    List<Booking> findByItemUserIdAndStatusContaining(long ownerId, String status);
 
     List<Booking> findByBookerId(long bookerId);
 
-    @Query("SELECT b " +
-            "FROM Booking b " +
-            "JOIN FETCH b.booker u " +
-            "WHERE u.id = ?1 AND " +
-            "CURRENT_TIMESTAMP BETWEEN b.start AND b.end")
-    List<Booking> getCurrentUserBookings(long userId);
+    List<Booking> findByBookerIdAndStartBeforeAndEndAfter(long ownerId, Instant now1, Instant now2);
 
-    @Query("SELECT b " +
-            "FROM Booking b " +
-            "JOIN FETCH b.booker u " +
-            "WHERE u.id = ?1 AND " +
-            "CURRENT_TIMESTAMP > b.end")
-    List<Booking> getPastUserBookings(long userId);
+    List<Booking> findByBookerIdAndEndBefore(long ownerId, Instant now);
 
-    @Query("SELECT b " +
-            "FROM Booking b " +
-            "JOIN FETCH b.booker u " +
-            "WHERE u.id = ?1 AND " +
-            "CURRENT_TIMESTAMP < b.start")
-    List<Booking> getFutureUserBookings(long userId);
+    List<Booking> findByBookerIdAndStartAfter(long ownerId, Instant now);
 
-    @Query("SELECT b " +
-            "FROM Booking b " +
-            "JOIN FETCH b.booker u " +
-            "WHERE u.id = ?1 AND " +
-            "b.status = 'WAITING'")
-    List<Booking> getWaitingUserBookings(long userId);
-
-    @Query("SELECT b " +
-            "FROM Booking b " +
-            "JOIN FETCH b.booker u " +
-            "WHERE u.id = ?1 AND " +
-            "b.status = 'REJECTED'")
-    List<Booking> getRejectedUserBookings(long userId);
+    List<Booking> findByBookerIdAndStatusContaining(long ownerId, String status);
 
     @Query("SELECT b " +
             "FROM Booking b " +
