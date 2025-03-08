@@ -6,7 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.Builder;
 import lombok.Data;
-import ru.yandex.practicum.shareIt.maker.OnCreate;
+import ru.yandex.practicum.shareIt.marker.OnCreate;
 
 @Data
 @Builder

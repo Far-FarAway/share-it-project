@@ -3,7 +3,7 @@ package ru.yandex.practicum.shareIt.user.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.yandex.practicum.shareIt.maker.OnCreate;
+import ru.yandex.practicum.shareIt.marker.OnCreate;
 import ru.yandex.practicum.shareIt.user.dto.UserDto;
 import ru.yandex.practicum.shareIt.user.service.UserService;
 
