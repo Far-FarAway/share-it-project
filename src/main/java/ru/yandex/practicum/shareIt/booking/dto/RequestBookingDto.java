@@ -1,25 +1,25 @@
-package ru.yandex.practicum.shareIt.user.dto;
+package ru.yandex.practicum.shareIt.booking.dto;
 
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
-import ru.yandex.practicum.shareIt.marker.OnCreate;
+import lombok.experimental.FieldDefaults;
+import ru.yandex.practicum.shareIt.booking.BookStatus;
+import ru.yandex.practicum.shareIt.maker.OnCreate;
 
 @Data
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UserDto {
-    @Positive
-    Long id;
+public class RequestBookingDto {
+    @NotNull
+    Long itemId;
+    BookStatus status;
     @NotNull(groups = {OnCreate.class})
     @NotBlank(groups = {OnCreate.class})
-    String name;
-    @Email(groups = {Builder.Default.class, OnCreate.class})
+    String start;
     @NotNull(groups = {OnCreate.class})
     @NotBlank(groups = {OnCreate.class})
-    String email;
+    String end;
 }

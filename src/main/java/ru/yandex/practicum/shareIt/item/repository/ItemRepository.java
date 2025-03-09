@@ -1,21 +1,24 @@
 package ru.yandex.practicum.shareIt.item.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import ru.yandex.practicum.shareIt.item.Item;
 
 import java.util.List;
 
-public interface ItemRepository {
-    Item postItem(Item item);
+public interface ItemRepository extends JpaRepository<Item, Long> {
+    List<Item> findByUserId(long userId);
 
-    Item updateItem(long itemId, Item item);
+    @Query("SELECT i " +
+            "FROM Item i " +
+            "WHERE (LOWER(i.name) LIKE LOWER(%?1%) OR LOWER(i.description) LIKE LOWER(%?1%)) AND " +
+            "i.available = TRUE")
+    List<Item> findByNameContainingOrDescriptionContaining(String text);
 
-    Item getItem(long itemId);
+    @Query("SELECT i.user.id " +
+            "FROM Item i " +
+            "WHERE i.id = ?1")
+    long checkItemOwner(long itemId);
 
-    List<Item> getUserItems(long userID);
 
-    List<Item> itemSearch(String text);
-
-    void deleteItem(long itemId);
-
-    boolean checkOwner(long userId, long itemId);
 }
