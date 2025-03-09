@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Positive;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.FieldDefaults;
 import ru.yandex.practicum.shareIt.marker.OnCreate;
 
 @Data
