@@ -17,6 +17,8 @@ import ru.yandex.practicum.shareIt.item.mapper.CommentMapper;
 import ru.yandex.practicum.shareIt.item.mapper.ItemMapper;
 import ru.yandex.practicum.shareIt.item.repository.CommentRepository;
 import ru.yandex.practicum.shareIt.item.repository.ItemRepository;
+import ru.yandex.practicum.shareIt.request.Request;
+import ru.yandex.practicum.shareIt.request.repository.RequestRepository;
 import ru.yandex.practicum.shareIt.user.User;
 import ru.yandex.practicum.shareIt.user.repository.UserRepository;
 
@@ -30,6 +32,7 @@ public class ItemServiceImpl implements ItemService {
     UserRepository userRepository;
     BookingRepository bookingRepository;
     CommentRepository commentRepository;
+    RequestRepository requestRepository;
     CommentMapper commentMapper;
     ItemMapper itemMapper;
 
@@ -37,6 +40,15 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto postItem(long userId, ItemDto itemDto) {
         userRepository.existsById(userId);
         Item item = itemRepository.save(prepareAndMakeItemPOJO(userId, itemDto));
+
+        if (itemDto.getRequestId() != null) {
+            Request request = requestRepository.findById(itemDto.getRequestId()).orElseThrow(() ->
+                    new NotFoundException("Запрос с таким id: " + itemDto.getRequestId() + " не найден"));
+
+            request.getItemIds().add(item.getId());
+            requestRepository.save(request);
+        }
+
         return prepareAndMakeItemDto(item, false);
     }
 

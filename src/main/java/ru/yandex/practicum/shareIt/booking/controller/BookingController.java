@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.shareIt.booking.dto.RequestBookingDto;
 import ru.yandex.practicum.shareIt.booking.dto.ResponseBookingDto;
 import ru.yandex.practicum.shareIt.booking.service.BookingService;
-import ru.yandex.practicum.shareIt.maker.OnCreate;
+import ru.yandex.practicum.shareIt.marker.OnCreate;
 
 import java.util.List;
 
