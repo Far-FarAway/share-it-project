@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.FieldDefaults;
 import ru.yandex.practicum.shareIt.booking.BookStatus;
-import ru.yandex.practicum.shareIt.maker.OnCreate;
+import ru.yandex.practicum.shareIt.marker.OnCreate;
 
 @Data
 @Builder
