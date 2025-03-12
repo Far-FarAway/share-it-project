@@ -17,8 +17,6 @@ import java.time.format.DateTimeFormatter;
 @RequiredArgsConstructor
 @Component
 public class BookingMapper {
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm:ss");
-
     public Booking makePOJO(User booker, Item item, RequestBookingDto requestBookingDto) {
         return Booking.builder()
                 .item(item)
