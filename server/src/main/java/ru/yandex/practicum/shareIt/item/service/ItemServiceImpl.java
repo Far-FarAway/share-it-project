@@ -76,8 +76,6 @@ public class ItemServiceImpl implements ItemService {
         Item item = itemRepository.findById(itemId)
                 .orElseThrow(() -> new NotFoundException("Предмет с id '" + itemId + "' не найден"));
 
-        bookingRepository.existsByItemId(itemId);
-
         return prepareAndMakeItemDto(item, false);
     }
 
