@@ -7,15 +7,12 @@ import ru.yandex.practicum.shareIt.item.Item;
 import ru.yandex.practicum.shareIt.item.dto.CommentDto;
 import ru.yandex.practicum.shareIt.item.dto.ItemDto;
 import ru.yandex.practicum.shareIt.user.User;
-import ru.yandex.practicum.shareIt.user.repository.UserRepository;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 @Component
 public class ItemMapper {
-    private final UserRepository userRepository;
-
     public Item makePOJO(User user, ItemDto itemDto) {
         return Item.builder()
                 .user(user)

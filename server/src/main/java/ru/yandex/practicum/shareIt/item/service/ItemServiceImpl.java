@@ -38,7 +38,6 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto postItem(long userId, ItemDto itemDto) {
-        userRepository.existsById(userId);
         Item item = itemRepository.save(prepareAndMakeItemPOJO(userId, itemDto));
 
         if (itemDto.getRequestId() != null) {
