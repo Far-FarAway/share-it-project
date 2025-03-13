@@ -19,25 +19,25 @@ public class UserController {
     private final UserClient client;
 
     @PostMapping
-    public ResponseEntity<Object> saveUser(@Validated(OnCreate.class) @RequestBody UserRequestDto userDto) {
+    public ResponseEntity<UserRequestDto> saveUser(@Validated(OnCreate.class) @RequestBody UserRequestDto userDto) {
         log.info("Post user {}", userDto);
         return client.saveUser(userDto);
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity<Object> getUser(@PathVariable long userId) {
+    public ResponseEntity<UserRequestDto> getUser(@PathVariable long userId) {
         log.info("Get user with id {}", userId);
         return client.getUser(userId);
     }
 
     @PatchMapping("/{userId}")
-    public ResponseEntity<Object> updateUser(@PathVariable long userId, @Validated(OnUpdate.class) @RequestBody UserRequestDto userDto) {
+    public ResponseEntity<UserRequestDto> updateUser(@PathVariable long userId, @Validated(OnUpdate.class) @RequestBody UserRequestDto userDto) {
         log.info("Update user {}, userId={}", userDto, userId);
         return client.updateUser(userId, userDto);
     }
 
     @DeleteMapping("/{userId}")
-    public ResponseEntity<Object> deleteUser(@PathVariable long userId) {
+    public ResponseEntity<UserRequestDto> deleteUser(@PathVariable long userId) {
         log.info("Delete user with id {}", userId);
         return client.deleteUser(userId);
     }

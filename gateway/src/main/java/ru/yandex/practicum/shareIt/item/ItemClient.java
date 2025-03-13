@@ -11,6 +11,7 @@ import ru.yandex.practicum.shareIt.client.BaseClient;
 import ru.yandex.practicum.shareIt.item.dto.CommentRequestDto;
 import ru.yandex.practicum.shareIt.item.dto.ItemRequestDto;
 
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -26,32 +27,32 @@ public class ItemClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> postItem(long userId, ItemRequestDto dto) {
+    public ResponseEntity<ItemRequestDto> postItem(long userId, ItemRequestDto dto) {
         return post("", userId, dto);
     }
 
-    public ResponseEntity<Object> updateItem(long userId, long itemId, ItemRequestDto dto) {
+    public ResponseEntity<ItemRequestDto> updateItem(long userId, long itemId, ItemRequestDto dto) {
         return patch("/" + itemId, userId, dto);
     }
 
-    public ResponseEntity<Object> getItem(long itemId) {
+    public ResponseEntity<ItemRequestDto> getItem(long itemId) {
         return get("/" + itemId);
     }
 
-    public ResponseEntity<Object> getUserItems(long userId) {
+    public ResponseEntity<List<ItemRequestDto>> getUserItems(long userId) {
         return get("", userId);
     }
 
-    public ResponseEntity<Object> itemSearch(String text) {
+    public ResponseEntity<List<ItemRequestDto>> itemSearch(String text) {
         Map<String, Object> params = Map.of("text", text);
         return get("/search?text={text}", null, params);
     }
 
-    public ResponseEntity<Object> deleteItem(long userId, long itemId) {
+    public ResponseEntity<ItemRequestDto> deleteItem(long userId, long itemId) {
         return delete("/" + itemId, userId);
     }
 
-    public ResponseEntity<Object> addComment(long userId, long itemId, CommentRequestDto dto) {
+    public ResponseEntity<CommentRequestDto> addComment(long userId, long itemId, CommentRequestDto dto) {
         return post("/" + itemId + "/comment", userId, dto);
     }
 }

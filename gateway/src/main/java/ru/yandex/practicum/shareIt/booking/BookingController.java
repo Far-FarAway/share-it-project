@@ -11,6 +11,8 @@ import ru.yandex.practicum.shareIt.booking.dto.BookItemRequestDto;
 import ru.yandex.practicum.shareIt.booking.dto.BookingState;
 import ru.yandex.practicum.shareIt.marker.OnCreate;
 
+import java.util.List;
+
 
 @Controller
 @RequestMapping(path = "/bookings")
@@ -21,7 +23,7 @@ public class BookingController {
     private final BookingClient bookingClient;
 
     @GetMapping
-    public ResponseEntity<Object> getUserBookings(@RequestHeader("X-Sharer-User-Id") long userId,
+    public ResponseEntity<List<BookItemRequestDto>> getUserBookings(@RequestHeader("X-Sharer-User-Id") long userId,
                                                   @RequestParam(name = "state", defaultValue = "all") String stateParam) {
         BookingState state = BookingState.from(stateParam)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
@@ -30,8 +32,8 @@ public class BookingController {
     }
 
     @GetMapping("/owner")
-    public ResponseEntity<Object> getOwnerBookings(@RequestHeader("X-Sharer-User-Id") long ownerId,
-                                                   @RequestParam(name = "state", defaultValue = "all") String stateParam) {
+    public ResponseEntity<List<BookItemRequestDto>> getOwnerBookings(@RequestHeader("X-Sharer-User-Id") long ownerId,
+                                                                     @RequestParam(name = "state", defaultValue = "all") String stateParam) {
         BookingState state = BookingState.from(stateParam)
                 .orElseThrow(() -> new IllegalArgumentException("Unknown state: " + stateParam));
         log.info("Get owner booking with state {}, ownerId={}", stateParam, ownerId);
@@ -39,21 +41,21 @@ public class BookingController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> bookItem(@RequestHeader("X-Sharer-User-Id") long userId,
+    public ResponseEntity<BookItemRequestDto> bookItem(@RequestHeader("X-Sharer-User-Id") long userId,
                                            @RequestBody @Validated(OnCreate.class) BookItemRequestDto requestDto) {
         log.info("Creating booking {}, userId={}", requestDto, userId);
         return bookingClient.bookItem(userId, requestDto);
     }
 
     @GetMapping("/{bookingId}")
-    public ResponseEntity<Object> getBooking(@RequestHeader("X-Sharer-User-Id") long userId,
+    public ResponseEntity<BookItemRequestDto> getBooking(@RequestHeader("X-Sharer-User-Id") long userId,
                                              @PathVariable Long bookingId) {
         log.info("Get booking {}, userId={}", bookingId, userId);
         return bookingClient.getBooking(userId, bookingId);
     }
 
     @PatchMapping("/{bookingId}")
-    public ResponseEntity<Object> changeBookStatus(@RequestHeader("X-Sharer-User-Id") long ownerId,
+    public ResponseEntity<BookItemRequestDto> changeBookStatus(@RequestHeader("X-Sharer-User-Id") long ownerId,
                                                    @PathVariable Long bookingId,
                                                    @RequestParam boolean approved) {
         log.info("Change booking status to {}, userId={}, bookingId={}", approved, ownerId, bookingId);

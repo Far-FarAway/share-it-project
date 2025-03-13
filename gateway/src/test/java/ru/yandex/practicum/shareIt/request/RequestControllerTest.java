@@ -97,13 +97,12 @@ class RequestControllerTest {
     void testGetRequestById() throws Exception {
         dto2.setDescription("Vingardium leviossssAAAAAA");
         Mockito.when(client.getRequestById(Mockito.anyLong()))
-                .thenReturn(ResponseEntity.ok(Arrays.asList(dto, dto2)));
+                .thenReturn(ResponseEntity.ok(dto));
 
         mvc.perform(get("/requests/379")
                         .accept(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
-                ).andExpect(jsonPath("[0]description", is(dto.getDescription())))
-                .andExpect(jsonPath("[1]description", is(dto2.getDescription())));
+                ).andExpect(jsonPath("description", is(dto.getDescription())));
 
         Mockito.verify(client, Mockito.times(1))
                 .getRequestById(379);

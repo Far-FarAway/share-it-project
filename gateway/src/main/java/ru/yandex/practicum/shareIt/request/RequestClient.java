@@ -10,6 +10,8 @@ import org.springframework.web.util.DefaultUriBuilderFactory;
 import ru.yandex.practicum.shareIt.client.BaseClient;
 import ru.yandex.practicum.shareIt.request.dto.RequestReqDto;
 
+import java.util.List;
+
 @Service
 public class RequestClient extends BaseClient {
     private static final String API_PREFIX = "/requests";
@@ -24,19 +26,19 @@ public class RequestClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> postRequest(long userId, RequestReqDto dto) {
+    public ResponseEntity<RequestReqDto> postRequest(long userId, RequestReqDto dto) {
         return post("", userId, dto);
     }
 
-    public ResponseEntity<Object> getUserRequests(long userId) {
+    public ResponseEntity<List<RequestReqDto>> getUserRequests(long userId) {
         return get("", userId);
     }
 
-    public ResponseEntity<Object> getAllRequests(long userId) {
+    public ResponseEntity<List<RequestReqDto>> getAllRequests(long userId) {
         return get("/all", userId);
     }
 
-    public ResponseEntity<Object> getRequestById(long requestId) {
+    public ResponseEntity<RequestReqDto> getRequestById(long requestId) {
         return get("/" + requestId);
     }
 }

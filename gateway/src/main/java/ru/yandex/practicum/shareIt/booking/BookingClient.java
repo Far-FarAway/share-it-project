@@ -3,6 +3,7 @@ package ru.yandex.practicum.shareIt.booking;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,27 +33,27 @@ public class BookingClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> getUserBookings(long userId, BookingState state) {
+    public ResponseEntity<List<BookItemRequestDto>> getUserBookings(long userId, BookingState state) {
         Map<String, Object> parameters = Map.of("state", state.name());
         return get("?state={state}", userId, parameters);
     }
 
-    public ResponseEntity<Object> getOwnerBookings(long ownerId, BookingState state) {
+    public ResponseEntity<List<BookItemRequestDto>> getOwnerBookings(long ownerId, BookingState state) {
         Map<String, Object> parameters = Map.of("state", state.name());
         return get("/owner?state={state}", ownerId, parameters);
     }
 
-    public ResponseEntity<Object> bookItem(long userId, BookItemRequestDto requestDto) {
+    public ResponseEntity<BookItemRequestDto> bookItem(long userId, BookItemRequestDto requestDto) {
         validated(requestDto);
         System.out.println("fsfhasfghajighiasgfgasuiighighasiaitiiuashuiiuasrhinasfaruvuiarhtijsdfpauihfawrhfijasbfgjapriasrhpiaujsrhf   " + requestDto.getEnd());
         return post("", userId, requestDto);
     }
 
-    public ResponseEntity<Object> getBooking(long userId, Long bookingId) {
+    public ResponseEntity<BookItemRequestDto> getBooking(long userId, Long bookingId) {
         return get("/" + bookingId, userId);
     }
 
-    public ResponseEntity<Object> changeBookingStatus(long ownerId, Long bookingId, boolean approved) {
+    public ResponseEntity<BookItemRequestDto> changeBookingStatus(long ownerId, Long bookingId, boolean approved) {
         Map<String, Object> params = Map.of("approved", approved);
         return patch("/" + bookingId + "?approved={approved}", ownerId, params, null);
     }

@@ -128,14 +128,14 @@ class ItemControllerTest {
         String text = dto.getDescription();
 
         Mockito.when(client.itemSearch(Mockito.anyString()))
-                .thenReturn(ResponseEntity.ok(dto2));
+                .thenReturn(ResponseEntity.ok(Arrays.asList(dto2)));
 
         mvc.perform(get("/items/search?text=" + text)
                         .header("X-Sharer-User-Id", 47)
                         .accept(MediaType.APPLICATION_JSON)
                         .characterEncoding(StandardCharsets.UTF_8)
-                ).andExpect(jsonPath("name", is(dto2.getName())))
-                .andExpect(jsonPath("description", is(dto2.getDescription())));
+                ).andExpect(jsonPath("[0]name", is(dto2.getName())))
+                .andExpect(jsonPath("[0]description", is(dto2.getDescription())));
 
         Mockito.verify(client, Mockito.times(1))
                 .itemSearch(text);
